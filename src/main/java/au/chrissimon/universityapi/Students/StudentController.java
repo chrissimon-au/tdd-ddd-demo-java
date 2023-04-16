@@ -14,9 +14,18 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class StudentController {
     
+    private StudentRepository studentRepository;
+
+    public StudentController(StudentRepository studentRepository) {
+        super();
+        this.studentRepository = studentRepository;
+    }
+
     @PostMapping("/students")
     ResponseEntity<Student> registerNewStudent(@RequestBody Student registerStudentRequest) {
         Student newStudent = Student.register(registerStudentRequest.getName());
+
+        this.studentRepository.save(newStudent);
 
         URI newStudentLocation = ServletUriComponentsBuilder
                         .fromCurrentRequest()
@@ -29,7 +38,9 @@ public class StudentController {
 
     @GetMapping("/students/{id}")
     Student getStudent(@PathVariable UUID id) {
-        return new Student(id, "Test Student");
+        Student student = this.studentRepository.findById(id)
+            .orElseThrow();
+        return student;
     }
     
 }
