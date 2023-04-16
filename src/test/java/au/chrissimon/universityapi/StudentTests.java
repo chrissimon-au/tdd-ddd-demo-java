@@ -22,17 +22,21 @@ public class StudentTests {
 
 	@Test
 	public void givenIAmAStudent_WhenIRegister() throws Exception {
+		RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test Student");
+
 		ResponseSpec response = WebTestClient
 			.bindToServer()
 				.baseUrl(baseUri())
 				.build()
 			.post()
 				.uri("/students")
+				.bodyValue(studentRequest)
 			.exchange();
 
 		itShouldRegisterANewStudent(response);
 		StudentResponse newStudent = itShouldAllocateANewId(response);
 		itShouldShowWhereToLocateNewStudent(response, newStudent);
+		itShouldConfirmStudentDetails(studentRequest, newStudent);
 	}
 
 	private void itShouldRegisterANewStudent(ResponseSpec response) {
@@ -57,5 +61,9 @@ public class StudentTests {
 		response
 			.expectHeader()
 				.location(baseUri() + "/students" + "/" + newStudent.getId());
+	}
+
+	private void itShouldConfirmStudentDetails(RegisterStudentRequest studentRequest, StudentResponse newStudent) {
+		assertThat(newStudent.getName()).isEqualTo(studentRequest.getName());
 	}
 }
