@@ -2,8 +2,12 @@ package au.chrissimon.universityapi.Students;
 
 import java.util.UUID;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Student {
-    private UUID id;
+    private @Id UUID id;
     private String name;
 
     public Student() {}
