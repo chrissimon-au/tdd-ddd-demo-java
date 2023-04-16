@@ -1,3 +1,10 @@
 contexts:
   - terms:
-    - name: empty
+  - name: University
+    domainVisionStatement: To allow students to register and enrol in courses.
+    terms:
+    - name: student
+      definition: A person who would like to study a course.
+      examples:
+        - The student has registered at the university.
+        - The student has enroled in the course.
