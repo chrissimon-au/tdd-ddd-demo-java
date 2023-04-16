@@ -4,9 +4,14 @@ import java.util.UUID;
 
 public class Student {
     private UUID id;
+    private String name;
 
-    public Student(UUID id) {
+    public Student() {}
+
+    public Student(UUID id, String name) {
+        super();
         setId(id);
+        setName(name);
     }
 
     public UUID getId() {
@@ -17,8 +22,16 @@ public class Student {
         this.id = id;
     }
 
-    public static Student register()
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public static Student register(String name)
     {
-        return new Student(UUID.randomUUID());
+        return new Student(UUID.randomUUID(), name);
     }
 }
