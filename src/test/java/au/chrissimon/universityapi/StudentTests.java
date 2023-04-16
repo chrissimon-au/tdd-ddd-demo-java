@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
+import java.time.Duration;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -28,6 +29,7 @@ public class StudentTests {
 		return WebTestClient
 			.bindToServer()
 				.baseUrl(baseUri())
+				.responseTimeout(Duration.ofSeconds(90))
 				.build();
 	}
 
@@ -80,7 +82,7 @@ public class StudentTests {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = {"Test Student"})
+	@ValueSource(strings = {"Test Student", "Another Student"})
 	public void givenIHaveRegistered_WhenICheckMyDetails(String studentName)
 	{
 		RegisterStudentRequest studentRequest = new RegisterStudentRequest(studentName);
