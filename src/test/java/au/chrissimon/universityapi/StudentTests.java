@@ -18,18 +18,21 @@ public class StudentTests {
 	@Value(value="${local.server.port}")
 	private int port;
 
+	private String baseUri() { return "http://localhost:" + port; }
+
 	@Test
 	public void givenIAmAStudent_WhenIRegister() throws Exception {
 		ResponseSpec response = WebTestClient
 			.bindToServer()
-				.baseUrl("http://localhost:" + port)
+				.baseUrl(baseUri())
 				.build()
 			.post()
 				.uri("/students")
 			.exchange();
 
 		itShouldRegisterANewStudent(response);
-		itShouldAllocateANewId(response);
+		StudentResponse newStudent = itShouldAllocateANewId(response);
+		itShouldShowWhereToLocateNewStudent(response, newStudent);
 	}
 
 	private void itShouldRegisterANewStudent(ResponseSpec response) {
@@ -38,12 +41,21 @@ public class StudentTests {
 			.isCreated();
 	}
 
-	private void itShouldAllocateANewId(ResponseSpec response) {
-		response
+	private StudentResponse itShouldAllocateANewId(ResponseSpec response) {
+		return response
 			.expectBody(StudentResponse.class)
 				.value(student -> {
 					assertThat(student.getId()).isNotEqualTo(new UUID(0, 0));
 					assertThat(student.getId()).isNotNull();
-				});
+
+				})
+				.returnResult()
+				.getResponseBody();
+	}
+
+	private void itShouldShowWhereToLocateNewStudent(ResponseSpec response, StudentResponse newStudent) {
+		response
+			.expectHeader()
+				.location(baseUri() + "/students" + "/" + newStudent.getId());
 	}
 }
