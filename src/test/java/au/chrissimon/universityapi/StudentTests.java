@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -65,5 +66,38 @@ public class StudentTests {
 
 	private void itShouldConfirmStudentDetails(RegisterStudentRequest studentRequest, StudentResponse newStudent) {
 		assertThat(newStudent.getName()).isEqualTo(studentRequest.getName());
+	}
+
+	@Test
+	public void givenIHaveRegistered_WhenICheckMyDetails()
+	{
+		RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test Student");
+
+		URI newStudentLocation = WebTestClient
+			.bindToServer()
+				.baseUrl(baseUri())
+				.build()
+			.post()
+				.uri("/students")
+				.bodyValue(studentRequest)
+			.exchange()
+				.expectBody(StudentResponse.class)
+				.returnResult()
+				.getResponseHeaders().getLocation();
+
+		ResponseSpec response = WebTestClient
+			.bindToServer()
+				.build()
+			.get()
+				.uri(newStudentLocation)
+			.exchange();
+			
+		itShouldFindTheNewStudent(response);
+	}
+
+	private void itShouldFindTheNewStudent(ResponseSpec response) {
+		response
+			.expectStatus()
+			.isOk();
 	}
 }
