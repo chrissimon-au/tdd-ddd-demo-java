@@ -16,4 +16,9 @@ public class Student {
     public void setId(UUID id) {
         this.id = id;
     }
+
+    public static Student register()
+    {
+        return new Student(UUID.randomUUID());
+    }
 }
