@@ -1,7 +1,8 @@
 package au.chrissimon.universityapi;
 
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -78,10 +79,11 @@ public class StudentTests {
 		assertThat(newStudent.getName()).isEqualTo(studentRequest.getName());
 	}
 
-	@Test
-	public void givenIHaveRegistered_WhenICheckMyDetails()
+	@ParameterizedTest
+	@ValueSource(strings = {"Test Student"})
+	public void givenIHaveRegistered_WhenICheckMyDetails(String studentName)
 	{
-		RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test Student");
+		RegisterStudentRequest studentRequest = new RegisterStudentRequest(studentName);
 
 		URI newStudentLocation = registerStudent(studentRequest)
 				.expectBody(StudentResponse.class)
@@ -94,7 +96,6 @@ public class StudentTests {
 			.exchange();
 			
 		itShouldFindTheNewStudent(response);
-
 		itShouldConfirmTheNewStudentsDetails(studentRequest, response);
 	}
 
