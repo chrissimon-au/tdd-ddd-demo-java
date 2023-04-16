@@ -94,11 +94,21 @@ public class StudentTests {
 			.exchange();
 			
 		itShouldFindTheNewStudent(response);
+
+		itShouldConfirmTheNewStudentsDetails(studentRequest, response);
 	}
 
 	private void itShouldFindTheNewStudent(ResponseSpec response) {
 		response
 			.expectStatus()
 			.isOk();
+	}
+
+	private void itShouldConfirmTheNewStudentsDetails(RegisterStudentRequest studentRequest, ResponseSpec response) {
+		response
+			.expectBody(StudentResponse.class)
+			.value(student -> {
+				assertThat(student.getName()).isEqualTo(studentRequest.getName());
+			});
 	}
 }
