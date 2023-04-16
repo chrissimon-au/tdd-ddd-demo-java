@@ -19,20 +19,30 @@ public class StudentTests {
 	@Value(value="${local.server.port}")
 	private int port;
 
+	private static final String STUDENT_PATH = "/students";
+
 	private String baseUri() { return "http://localhost:" + port; }
+
+	private WebTestClient newWebClient() {
+		return WebTestClient
+			.bindToServer()
+				.baseUrl(baseUri())
+				.build();
+	}
+
+	private ResponseSpec registerStudent(RegisterStudentRequest studentRequest) {
+		return newWebClient()
+			.post()
+				.uri(STUDENT_PATH)
+				.bodyValue(studentRequest)
+			.exchange();
+	}
 
 	@Test
 	public void givenIAmAStudent_WhenIRegister() throws Exception {
 		RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test Student");
 
-		ResponseSpec response = WebTestClient
-			.bindToServer()
-				.baseUrl(baseUri())
-				.build()
-			.post()
-				.uri("/students")
-				.bodyValue(studentRequest)
-			.exchange();
+		ResponseSpec response = registerStudent(studentRequest);
 
 		itShouldRegisterANewStudent(response);
 		StudentResponse newStudent = itShouldAllocateANewId(response);
@@ -61,7 +71,7 @@ public class StudentTests {
 	private void itShouldShowWhereToLocateNewStudent(ResponseSpec response, StudentResponse newStudent) {
 		response
 			.expectHeader()
-				.location(baseUri() + "/students" + "/" + newStudent.getId());
+				.location(baseUri() + STUDENT_PATH + "/" + newStudent.getId());
 	}
 
 	private void itShouldConfirmStudentDetails(RegisterStudentRequest studentRequest, StudentResponse newStudent) {
@@ -73,21 +83,12 @@ public class StudentTests {
 	{
 		RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test Student");
 
-		URI newStudentLocation = WebTestClient
-			.bindToServer()
-				.baseUrl(baseUri())
-				.build()
-			.post()
-				.uri("/students")
-				.bodyValue(studentRequest)
-			.exchange()
+		URI newStudentLocation = registerStudent(studentRequest)
 				.expectBody(StudentResponse.class)
 				.returnResult()
 				.getResponseHeaders().getLocation();
 
-		ResponseSpec response = WebTestClient
-			.bindToServer()
-				.build()
+		ResponseSpec response = newWebClient()
 			.get()
 				.uri(newStudentLocation)
 			.exchange();
