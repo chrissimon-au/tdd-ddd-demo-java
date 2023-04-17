@@ -23,4 +23,11 @@ public class RoomApi {
 			.exchange();
 	}
 
+    public RoomResponse getRoomFromResponse(ResponseSpec response) {
+        return response
+            .expectBody(RoomResponse.class)
+                .returnResult()
+                .getResponseBody();
+    }
+
 }
