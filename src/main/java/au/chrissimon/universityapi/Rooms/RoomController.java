@@ -14,9 +14,19 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @RestController
 public class RoomController {
 
+    private RoomRepository roomRepository;
+
+    public RoomController(RoomRepository roomRepository) {
+        super();
+        this.roomRepository = roomRepository;
+    }
+
     @PostMapping("/rooms")
     public ResponseEntity<Room> setupNewRoom(@RequestBody Room roomRequest) {
         Room newRoom = Room.setupNew(roomRequest);
+
+        this.roomRepository.save(newRoom);
+
         return ResponseEntity.created(roomUri(newRoom.getId())).body(newRoom);
     }
 
@@ -30,6 +40,8 @@ public class RoomController {
 
     @GetMapping("/rooms/{id}")
     Room getRoom(@PathVariable UUID id) {
-        return new Room(id, "Test Room", 5);
+        Room room = this.roomRepository.findById(id)
+            .orElseThrow();
+        return room;
     }
 }
