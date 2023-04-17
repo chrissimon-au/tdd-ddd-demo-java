@@ -3,52 +3,31 @@ package au.chrissimon.universityapi;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
-import org.springframework.beans.factory.annotation.Value;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
-import java.time.Duration;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class StudentTests {
 
-	@Value(value="${local.server.port}")
-	private int port;
-
-	private static final String STUDENT_PATH = "/students";
-
-	private String baseUri() { return "http://localhost:" + port; }
-
-	private WebTestClient newWebClient() {
-		return WebTestClient
-			.bindToServer()
-				.baseUrl(baseUri())
-				.responseTimeout(Duration.ofSeconds(90))
-				.build();
-	}
-
-	private ResponseSpec registerStudent(RegisterStudentRequest studentRequest) {
-		return newWebClient()
-			.post()
-				.uri(STUDENT_PATH)
-				.bodyValue(studentRequest)
-			.exchange();
-	}
+	@Autowired
+	private StudentApi studentApi;
 
 	@Test
 	public void givenIAmAStudent_WhenIRegister() throws Exception {
 		RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test Student");
 
-		ResponseSpec response = registerStudent(studentRequest);
+		ResponseSpec response = studentApi.registerStudent(studentRequest);
 
 		itShouldRegisterANewStudent(response);
-		StudentResponse newStudent = itShouldAllocateANewId(response);
+		StudentResponse newStudent = studentApi.getStudentFromResponse(response);
+		itShouldAllocateANewId(newStudent);
 		itShouldShowWhereToLocateNewStudent(response, newStudent);
 		itShouldConfirmStudentDetails(studentRequest, newStudent);
 	}
@@ -61,7 +40,7 @@ public class StudentTests {
 
 	private StudentResponse itShouldAllocateANewId(ResponseSpec response) {
 		return response
-			.expectBody(StudentResponse.class)
+				.expectBody(StudentResponse.class)
 				.value(student -> {
 					assertThat(student.getId()).isNotEqualTo(new UUID(0, 0));
 					assertThat(student.getId()).isNotNull();
@@ -71,10 +50,15 @@ public class StudentTests {
 				.getResponseBody();
 	}
 
+	private void itShouldAllocateANewId(StudentResponse newStudent) {
+		assertThat(newStudent.getId()).isNotEqualTo(new UUID(0, 0));
+		assertThat(newStudent.getId()).isNotNull();
+	}
+
 	private void itShouldShowWhereToLocateNewStudent(ResponseSpec response, StudentResponse newStudent) {
 		response
 			.expectHeader()
-				.location(baseUri() + STUDENT_PATH + "/" + newStudent.getId());
+				.location(studentApi.uriForStudentId(newStudent.getId()).toString());
 	}
 
 	private void itShouldConfirmStudentDetails(RegisterStudentRequest studentRequest, StudentResponse newStudent) {
@@ -87,31 +71,21 @@ public class StudentTests {
 	{
 		RegisterStudentRequest studentRequest = new RegisterStudentRequest(studentName);
 
-		URI newStudentLocation = registerStudent(studentRequest)
+		URI newStudentLocation = studentApi.registerStudent(studentRequest)
 				.expectBody(StudentResponse.class)
 				.returnResult()
 				.getResponseHeaders().getLocation();
 
-		ResponseSpec response = newWebClient()
-			.get()
-				.uri(newStudentLocation)
-			.exchange();
+		ResponseSpec response = studentApi.getStudent(newStudentLocation);
 			
 		itShouldFindTheNewStudent(response);
-		itShouldConfirmTheNewStudentsDetails(studentRequest, response);
+		StudentResponse student = studentApi.getStudentFromResponse(response);
+		itShouldConfirmStudentDetails(studentRequest, student);
 	}
 
 	private void itShouldFindTheNewStudent(ResponseSpec response) {
 		response
 			.expectStatus()
 			.isOk();
-	}
-
-	private void itShouldConfirmTheNewStudentsDetails(RegisterStudentRequest studentRequest, ResponseSpec response) {
-		response
-			.expectBody(StudentResponse.class)
-			.value(student -> {
-				assertThat(student.getName()).isEqualTo(studentRequest.getName());
-			});
 	}
 }
