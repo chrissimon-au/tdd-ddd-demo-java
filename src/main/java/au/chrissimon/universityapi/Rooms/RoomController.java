@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -28,7 +29,7 @@ public class RoomController {
     }
 
     @GetMapping("/rooms/{id}")
-    void getRoom() {
-
+    Room getRoom(@PathVariable UUID id) {
+        return new Room(id, "Test Room", 5);
     }
 }
