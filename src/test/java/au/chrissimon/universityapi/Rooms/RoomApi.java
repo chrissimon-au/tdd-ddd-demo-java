@@ -38,4 +38,11 @@ public class RoomApi {
                 .getResponseBody();
     }
 
+    public ResponseSpec getRoom(URI roomUri) {
+        return Helpers.newWebClient(port)
+            .get()
+                .uri(roomUri)
+            .exchange();
+    }
+
 }
