@@ -27,13 +27,19 @@ public class StudentController {
 
         this.studentRepository.save(newStudent);
 
-        URI newStudentLocation = ServletUriComponentsBuilder
-                        .fromCurrentRequest()
-                        .path("/{id}")
-                        .buildAndExpand(newStudent.getId())
-                        .toUri();
+        URI newStudentLocation = studentUri(newStudent.getId());
 
-        return ResponseEntity.created(newStudentLocation).body(newStudent);
+        return ResponseEntity
+                .created(newStudentLocation)
+                .body(newStudent);
+    }
+
+    URI studentUri(UUID id) {
+        return ServletUriComponentsBuilder
+            .fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(id)
+            .toUri();
     }
 
     @GetMapping("/students/{id}")
