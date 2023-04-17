@@ -3,12 +3,14 @@ package au.chrissimon.universityapi.Students;
 import java.net.URI;
 import java.util.UUID;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -45,7 +47,7 @@ public class StudentController {
     @GetMapping("/students/{id}")
     Student getStudent(@PathVariable UUID id) {
         Student student = this.studentRepository.findById(id)
-            .orElseThrow();
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return student;
     }
     
