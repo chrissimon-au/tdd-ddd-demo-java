@@ -1,5 +1,8 @@
 package au.chrissimon.universityapi.Rooms;
 
+import java.net.URI;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -15,6 +18,10 @@ public class RoomApi {
     private int port;
 
     private static final String ROOM_PATH = "/rooms";
+
+    public URI uriForRoomId(UUID id) {
+        return URI.create(Helpers.baseUri(port) + ROOM_PATH + "/" + id);
+    }
 
     public ResponseSpec setupRoom() {
 		return Helpers.newWebClient(port)
