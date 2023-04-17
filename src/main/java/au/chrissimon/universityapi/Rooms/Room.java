@@ -2,10 +2,16 @@ package au.chrissimon.universityapi.Rooms;
 
 import java.util.UUID;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Room {
-    private UUID id;
+    private @Id UUID id;
     private String name;
     private int capacity;
+
+    public Room() { }
     
     public Room(UUID id, String name, int capacity) {
         super();
