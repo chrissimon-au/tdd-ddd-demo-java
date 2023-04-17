@@ -9,7 +9,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -60,7 +59,8 @@ public class RoomTests {
 
     private static Stream<Arguments> testRooms() {
         return Stream.of(
-            arguments("Test Room", 5)
+            arguments("Test Room", 5),
+            arguments("Another Room", 10)
         );
     }
 
