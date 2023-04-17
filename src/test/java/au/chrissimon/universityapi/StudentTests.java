@@ -88,4 +88,20 @@ public class StudentTests {
 			.expectStatus()
 			.isOk();
 	}
+
+	@Test
+	public void givenIHaveTheWrongId_WhenICheckMyDetails()
+	{
+		UUID wrongId = UUID.randomUUID();
+
+		ResponseSpec response = studentApi.getStudent(wrongId);
+
+		itShouldNotFindTheStudent(response);
+	}
+
+	private void itShouldNotFindTheStudent(ResponseSpec response) {
+		response
+			.expectStatus()
+			.isNotFound();
+	}
 }

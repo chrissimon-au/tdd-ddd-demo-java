@@ -29,6 +29,10 @@ public class StudentApi {
 			.exchange();
 	}
 
+    public ResponseSpec getStudent(UUID id) {
+        return getStudent(uriForStudentId(id));
+    }
+
     public ResponseSpec getStudent(URI studentUri) {
         return Helpers.newWebClient(port)
 			.get()
