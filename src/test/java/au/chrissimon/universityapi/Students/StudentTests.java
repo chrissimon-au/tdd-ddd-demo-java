@@ -1,4 +1,4 @@
-package au.chrissimon.universityapi;
+package au.chrissimon.universityapi.Students;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

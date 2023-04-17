@@ -1,4 +1,4 @@
-package au.chrissimon.universityapi;
+package au.chrissimon.universityapi.Students;
 
 public class RegisterStudentRequest	{
 	private String name;

@@ -1,4 +1,4 @@
-package au.chrissimon.universityapi;
+package au.chrissimon.universityapi.Students;
 
 import java.net.URI;
 import java.util.UUID;
@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
+
+import au.chrissimon.universityapi.Helpers;
 
 @Lazy // To ensure local.server.port is set by the time it is wired.
 @Component
