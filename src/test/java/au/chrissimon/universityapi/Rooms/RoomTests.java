@@ -1,5 +1,6 @@
 package au.chrissimon.universityapi.Rooms;
 
+import java.net.URI;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -49,5 +50,26 @@ public class RoomTests {
     private void itShouldConfirmRoomDetails(SetupRoomRequest roomRequest, RoomResponse newRoom) {
 		assertThat(newRoom.getName()).isEqualTo(roomRequest.getName());
         assertThat(newRoom.getCapacity()).isEqualTo(roomRequest.getCapacity());
+	}
+
+    @Test
+    public void givenIHaveSetupARoom_WhenICheckItsDetails()
+    {
+        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
+
+        URI newRoomLocation = roomApi.setupRoom(roomRequest)
+				.expectBody(RoomResponse.class)
+				.returnResult()
+				.getResponseHeaders().getLocation();
+
+        ResponseSpec response = roomApi.getRoom(newRoomLocation);
+    
+        itShouldFindTheNewRoom(response);
+    }
+
+    private void itShouldFindTheNewRoom(ResponseSpec response) {
+		response
+			.expectStatus()
+			.isOk();
 	}
 }
