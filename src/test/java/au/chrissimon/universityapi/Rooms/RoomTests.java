@@ -21,7 +21,8 @@ public class RoomTests {
 		ResponseSpec response = roomApi.setupRoom();
 
         itShouldSetupANewRoom(response);
-        itShouldAllocateANewId(response);
+        RoomResponse newRoom = roomApi.getRoomFromResponse(response);
+        itShouldAllocateANewId(newRoom);
 	}
 
     private void itShouldSetupANewRoom(ResponseSpec response) {
@@ -30,12 +31,8 @@ public class RoomTests {
             .isCreated();
     }
 
-    private void itShouldAllocateANewId(ResponseSpec response) {
-        response
-			.expectBody(RoomResponse.class)
-				.value(room -> {
-					assertThat(room.getId()).isNotEqualTo(new UUID(0, 0));
-                    assertThat(room.getId()).isNotNull();
-				});
+    private void itShouldAllocateANewId(RoomResponse room) {
+    	assertThat(room.getId()).isNotEqualTo(new UUID(0, 0));
+        assertThat(room.getId()).isNotNull();
     }
 }
