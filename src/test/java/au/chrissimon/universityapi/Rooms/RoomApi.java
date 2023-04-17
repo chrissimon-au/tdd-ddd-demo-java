@@ -23,10 +23,11 @@ public class RoomApi {
         return URI.create(Helpers.baseUri(port) + ROOM_PATH + "/" + id);
     }
 
-    public ResponseSpec setupRoom() {
+    public ResponseSpec setupRoom(SetupRoomRequest roomRequest) {
 		return Helpers.newWebClient(port)
 			.post()
 				.uri(ROOM_PATH)
+                .bodyValue(roomRequest)
 			.exchange();
 	}
 

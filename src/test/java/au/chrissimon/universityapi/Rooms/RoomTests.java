@@ -18,12 +18,15 @@ public class RoomTests {
 
     @Test
 	public void givenIAmAnAdmin_WhenISetupANewRoom() throws Exception {
-		ResponseSpec response = roomApi.setupRoom();
+        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
+
+		ResponseSpec response = roomApi.setupRoom(roomRequest);
 
         itShouldSetupANewRoom(response);
         RoomResponse newRoom = roomApi.getRoomFromResponse(response);
         itShouldAllocateANewId(newRoom);
         itShouldShowWhereToLocateNewRoom(response, newRoom);
+        itShouldConfirmRoomDetails(roomRequest, newRoom);
 	}
 
     private void itShouldSetupANewRoom(ResponseSpec response) {
@@ -41,5 +44,10 @@ public class RoomTests {
 		response
 			.expectHeader()
 				.location(roomApi.uriForRoomId(newRoom.getId()).toString());
+	}
+
+    private void itShouldConfirmRoomDetails(SetupRoomRequest roomRequest, RoomResponse newRoom) {
+		assertThat(newRoom.getName()).isEqualTo(roomRequest.getName());
+        assertThat(newRoom.getCapacity()).isEqualTo(roomRequest.getCapacity());
 	}
 }

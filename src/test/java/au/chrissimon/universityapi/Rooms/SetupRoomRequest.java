@@ -1,27 +1,21 @@
 package au.chrissimon.universityapi.Rooms;
 
-import java.util.UUID;
-
-public class RoomResponse {
-    private UUID id;
+public class SetupRoomRequest {
 	private String name;
 	private int capacity;
 
-	RoomResponse() {}
+	SetupRoomRequest() {}
 
-	public UUID getId() {
-		return id;
-	}
-
-	public void setId(UUID id) {
-		this.id = id;
+	SetupRoomRequest(String name, int capacity) {
+		this.name = name;
+		this.capacity = capacity;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
+	public void setId(String name) {
 		this.name = name;
 	}
 
