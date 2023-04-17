@@ -64,7 +64,10 @@ public class RoomTests {
 
         ResponseSpec response = roomApi.getRoom(newRoomLocation);
     
+        RoomResponse newStudent = roomApi.getRoomFromResponse(response);
+
         itShouldFindTheNewRoom(response);
+        itShouldConfirmRoomDetails(roomRequest, newStudent);
     }
 
     private void itShouldFindTheNewRoom(ResponseSpec response) {
