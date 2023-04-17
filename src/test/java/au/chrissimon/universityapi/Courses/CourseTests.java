@@ -8,6 +8,10 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import org.springframework.beans.factory.annotation.Value;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.UUID;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CourseTests {
 
@@ -25,11 +29,21 @@ public class CourseTests {
 			.exchange();
 
 		itShouldIncludeTheCourseInTheCatalog(response);
+		itShouldAllocateANewId(response);
 	}
 
 	private void itShouldIncludeTheCourseInTheCatalog(ResponseSpec response) {
 		response
 			.expectStatus()
 			.isCreated();
+	}
+
+	private void itShouldAllocateANewId(ResponseSpec response) {
+		response
+			.expectBody(CourseResponse.class)
+				.value(course -> {
+					assertThat(course.getId()).isNotEqualTo(new UUID(0, 0));
+					assertThat(course.getId()).isNotNull();
+				});
 	}
 }
