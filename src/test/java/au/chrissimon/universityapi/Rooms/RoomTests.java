@@ -88,4 +88,21 @@ public class RoomTests {
 			.expectStatus()
 			.isOk();
 	}
+
+    @Test
+	public void givenIHaveTheWrongId_WhenICheckTheRoomDetails()
+	{
+		UUID wrongId = UUID.randomUUID();
+
+		ResponseSpec response = roomApi.getRoom(wrongId);
+
+		itShouldNotFindTheRoom(response);
+	}
+
+	private void itShouldNotFindTheRoom(ResponseSpec response) {
+		response
+			.expectStatus()
+			.isNotFound();
+	}
+
 }

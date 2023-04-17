@@ -45,4 +45,7 @@ public class RoomApi {
             .exchange();
     }
 
+    public ResponseSpec getRoom(UUID id) {
+        return getRoom(uriForRoomId(id));
+    }
 }
