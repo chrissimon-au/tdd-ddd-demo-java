@@ -1,4 +1,4 @@
-package au.chrissimon.universityapi;
+package au.chrissimon.universityapi.Students;
 
 import java.util.UUID;
 
