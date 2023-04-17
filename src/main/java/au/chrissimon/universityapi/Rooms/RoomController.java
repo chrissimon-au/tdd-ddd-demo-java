@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -12,8 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class RoomController {
 
     @PostMapping("/rooms")
-    public ResponseEntity<Room> setupNewRoom() {
-        Room newRoom = Room.setupNew();
+    public ResponseEntity<Room> setupNewRoom(@RequestBody Room roomRequest) {
+        Room newRoom = Room.setupNew(roomRequest);
         return ResponseEntity.created(roomUri(newRoom.getId())).body(newRoom);
     }
 
