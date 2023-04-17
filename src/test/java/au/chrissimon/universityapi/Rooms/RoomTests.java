@@ -23,6 +23,7 @@ public class RoomTests {
         itShouldSetupANewRoom(response);
         RoomResponse newRoom = roomApi.getRoomFromResponse(response);
         itShouldAllocateANewId(newRoom);
+        itShouldShowWhereToLocateNewRoom(response, newRoom);
 	}
 
     private void itShouldSetupANewRoom(ResponseSpec response) {
@@ -35,4 +36,10 @@ public class RoomTests {
     	assertThat(room.getId()).isNotEqualTo(new UUID(0, 0));
         assertThat(room.getId()).isNotNull();
     }
+
+    private void itShouldShowWhereToLocateNewRoom(ResponseSpec response, RoomResponse newRoom) {
+		response
+			.expectHeader()
+				.location(roomApi.uriForRoomId(newRoom.getId()).toString());
+	}
 }
