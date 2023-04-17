@@ -4,9 +4,8 @@ import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,21 +14,16 @@ import java.util.UUID;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class CourseTests {
 
-	@Value(value="${local.server.port}")
-	private int port;
+	@Autowired
+	private CourseApi courseApi;
 
 	@Test
 	public void givenIAmAnAdmin_WhenIIncludeANewCourseInTheCatalog() throws Exception {
-		ResponseSpec response = WebTestClient
-			.bindToServer()
-				.baseUrl("http://localhost:" + port)
-				.build()
-			.post()
-				.uri("/courses")
-			.exchange();
+		ResponseSpec response = courseApi.includeNewCourseInCatalog();
 
 		itShouldIncludeTheCourseInTheCatalog(response);
-		itShouldAllocateANewId(response);
+		CourseResponse newCourse = courseApi.getCourseFromResponse(response);
+		itShouldAllocateANewId(newCourse);
 	}
 
 	private void itShouldIncludeTheCourseInTheCatalog(ResponseSpec response) {
@@ -38,12 +32,8 @@ public class CourseTests {
 			.isCreated();
 	}
 
-	private void itShouldAllocateANewId(ResponseSpec response) {
-		response
-			.expectBody(CourseResponse.class)
-				.value(course -> {
-					assertThat(course.getId()).isNotEqualTo(new UUID(0, 0));
-					assertThat(course.getId()).isNotNull();
-				});
+	private void itShouldAllocateANewId(CourseResponse course) {
+		assertThat(course.getId()).isNotEqualTo(new UUID(0, 0));
+		assertThat(course.getId()).isNotNull();
 	}
 }
