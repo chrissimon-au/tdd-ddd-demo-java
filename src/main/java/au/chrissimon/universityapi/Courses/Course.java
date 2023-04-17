@@ -17,4 +17,8 @@ public class Course {
 	public void setId(UUID id) {
 		this.id = id;
 	}
+
+    public static Course includeInCatalog() {
+        return new Course(UUID.randomUUID());
+    }
 }
