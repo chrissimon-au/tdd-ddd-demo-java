@@ -47,6 +47,7 @@ public class StudentTests {
 			.expectBody(StudentResponse.class)
 				.value(student -> {
 					assertThat(student.getId()).isNotEqualTo(new UUID(0, 0));
+					assertThat(student.getId()).isNotNull();
 				})
 				.returnResult()
 				.getResponseBody();
