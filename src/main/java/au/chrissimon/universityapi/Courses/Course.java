@@ -8,34 +8,44 @@ import jakarta.persistence.Id;
 @Entity
 public class Course {
     private @Id UUID id;
-	private String name;
+    private String name;
+    private UUID roomId;
 
-	Course() { }
+    Course() { }
 
-	Course(UUID id, String name) {
-		super();
-		setId(id);
-		setName(name);
-	}
+    Course(UUID id, String name, UUID roomId) {
+        super();
+        setId(id);
+        setName(name);
+        setRoomId(roomId);
+    }
 
-	public UUID getId() {
-		return id;
-	}
+    public UUID getId() {
+        return id;
+    }
 
-	public void setId(UUID id) {
-		this.id = id;
-	}
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public static Course includeInCatalog(String name) {
-        return new Course(UUID.randomUUID(), name);
+    public static Course includeInCatalog(String name, UUID roomId) {
+        return new Course(UUID.randomUUID(), name, roomId);
+    }
+
+    public UUID getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(UUID roomId) {
+        this.roomId = roomId;
     }
 }
