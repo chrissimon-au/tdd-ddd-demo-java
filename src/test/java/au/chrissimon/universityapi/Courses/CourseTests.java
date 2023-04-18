@@ -24,6 +24,7 @@ public class CourseTests {
 		itShouldIncludeTheCourseInTheCatalog(response);
 		CourseResponse newCourse = courseApi.getCourseFromResponse(response);
 		itShouldAllocateANewId(newCourse);
+		itShouldShowWhereToLocateNewCourse(response, newCourse);
 	}
 
 	private void itShouldIncludeTheCourseInTheCatalog(ResponseSpec response) {
@@ -35,5 +36,11 @@ public class CourseTests {
 	private void itShouldAllocateANewId(CourseResponse course) {
 		assertThat(course.getId()).isNotEqualTo(new UUID(0, 0));
 		assertThat(course.getId()).isNotNull();
+	}
+
+	private void itShouldShowWhereToLocateNewCourse(ResponseSpec response, CourseResponse newCourse) {
+		response
+			.expectHeader()
+				.location(courseApi.uriForCourseId(newCourse.getId()).toString());
 	}
 }
