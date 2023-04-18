@@ -31,9 +31,8 @@ public class StudentTests {
 			.exchange();
 
 		itShouldRegisterANewStudent(response);
-		// StudentResponse newStudent = 
-		itShouldAllocateANewId(response);
-		// itShouldShowWhereToLocateNewStudent(response, newStudent);
+		StudentResponse newStudent = itShouldAllocateANewId(response);
+		itShouldShowWhereToLocateNewStudent(response, newStudent);
 	}
 
 	private void itShouldRegisterANewStudent(ResponseSpec response) {
@@ -53,9 +52,9 @@ public class StudentTests {
 				.getResponseBody();
 	}
 
-	// private void itShouldShowWhereToLocateNewStudent(ResponseSpec response, StudentResponse newStudent) {
-	// 	response
-	// 		.expectHeader()
-	// 			.location(baseUri() + "/students" + "/" + newStudent.getId());
-	// }
+	private void itShouldShowWhereToLocateNewStudent(ResponseSpec response, StudentResponse newStudent) {
+		response
+			.expectHeader()
+				.location(baseUri() + "/students" + "/" + newStudent.getId());
+	}
 }
