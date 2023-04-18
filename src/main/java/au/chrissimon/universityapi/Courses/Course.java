@@ -1,7 +1,9 @@
 package au.chrissimon.universityapi.Courses;
 
+import java.util.Optional;
 import java.util.UUID;
 
+import au.chrissimon.universityapi.Rooms.Room;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
@@ -38,8 +40,11 @@ public class Course {
         this.name = name;
     }
 
-    public static Course includeInCatalog(String name, UUID roomId) {
-        return new Course(UUID.randomUUID(), name, roomId);
+    public static Optional<Course> includeInCatalog(String name, Optional<Room> room) {
+        return room
+            .map(r -> {
+                return new Course(UUID.randomUUID(), name, r.getId());
+            });
     }
 
     public UUID getRoomId() {
