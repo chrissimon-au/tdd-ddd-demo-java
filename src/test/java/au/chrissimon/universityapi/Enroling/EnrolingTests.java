@@ -46,7 +46,7 @@ public class EnrolingTests {
         itShouldEnrolMe(enrolmentResponse);
         EnrolmentResponse newEnrolment = enrolmentApi.getEnrolmentFromResponse(enrolmentResponse);
         itShouldAllocateANewEnrolmentId(newEnrolment);
-        itShouldConfirmEnrolmentDetails(student, newEnrolment);
+        itShouldConfirmEnrolmentDetails(student, course, newEnrolment);
     }
     
     private void itShouldEnrolMe(ResponseSpec enrolmentResponse) {
@@ -60,8 +60,9 @@ public class EnrolingTests {
         assertThat(enrolment.getId()).isNotNull();
     }
 
-    private void itShouldConfirmEnrolmentDetails(StudentResponse student, EnrolmentResponse enrolment) {
+    private void itShouldConfirmEnrolmentDetails(StudentResponse student, CourseResponse course, EnrolmentResponse enrolment) {
         assertThat(enrolment.getStudentId()).isEqualTo(student.getId());
+        assertThat(enrolment.getCourseId()).isEqualTo(course.getId());
     }
 
 }

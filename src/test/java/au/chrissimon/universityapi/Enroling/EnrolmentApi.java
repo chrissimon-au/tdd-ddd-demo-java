@@ -17,9 +17,11 @@ public class EnrolmentApi {
     private int port;
 
     public ResponseSpec enrolStudentInCourse(StudentResponse student, CourseResponse course) {
+        EnrolStudentInCourseRequest enrolStudentInCourseRequest = new EnrolStudentInCourseRequest(course.getId());
         return Helpers.newWebClient(port)
             .post()
                 .uri("/students/" + student.getId() + "/courses")
+                .bodyValue(enrolStudentInCourseRequest)
             .exchange();
     }
 
