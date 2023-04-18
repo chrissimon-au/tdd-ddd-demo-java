@@ -5,13 +5,15 @@ import java.util.UUID;
 public class Enrolment {
     private UUID id;
     private UUID studentId;
+    private UUID courseId;
 
     Enrolment() { }
 
-    Enrolment(UUID id, UUID studentId) {
+    Enrolment(UUID id, UUID studentId, UUID courseId) {
         super();
         setId(id);
         setStudentId(studentId);
+        setCourseId(courseId);
     }
 
     public UUID getId() {
@@ -28,5 +30,13 @@ public class Enrolment {
 
     public void setStudentId(UUID studentId) {
         this.studentId = studentId;
+    }
+
+    public UUID getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(UUID courseId) {
+        this.courseId = courseId;
     }
 }
