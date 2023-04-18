@@ -108,4 +108,20 @@ public class CourseTests {
 
 		itShouldNotIncludeTheCourse(response);
 	}
+
+	@Test
+	public void givenIHaveTheWrongId_WhenICheckTheCourseDetails()
+	{
+		UUID wrongId = UUID.randomUUID();
+
+		ResponseSpec response = courseApi.getCourse(wrongId);
+
+		itShouldNotFindTheRoom(response);
+	}
+
+	private void itShouldNotFindTheRoom(ResponseSpec response) {
+		response
+			.expectStatus()
+			.isNotFound();
+	}
 }
