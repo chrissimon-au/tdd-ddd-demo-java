@@ -5,7 +5,7 @@ public class RegisterStudentRequest	{
 	
 	RegisterStudentRequest() {}
 
-	RegisterStudentRequest(String name) {
+	public RegisterStudentRequest(String name) {
 		this.name = name;
 	}
 
