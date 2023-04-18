@@ -53,7 +53,7 @@ public class CourseController {
     @GetMapping("/courses/{id}")
     public Course getCourse(@PathVariable UUID id) {
         Course course = courseRepository.findById(id)
-            .orElseThrow();
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         return course;
     }
 }
