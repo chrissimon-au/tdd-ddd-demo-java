@@ -1,5 +1,8 @@
 package au.chrissimon.universityapi.Courses;
 
+import java.net.URI;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -10,13 +13,16 @@ import au.chrissimon.universityapi.Helpers;
 @Lazy // To ensure local.server.port is set by the time it is wired.
 @Component
 public class CourseApi {
+
 	@Value(value="${local.server.port}")
 	private int port;
+
+	private static final String COURSE_PATH = "/courses";
 
 	public ResponseSpec includeNewCourseInCatalog() {
 		return Helpers.newWebClient(port)
 			.post()
-				.uri("/courses")
+				.uri(COURSE_PATH)
 			.exchange();
 	}
 
@@ -25,5 +31,9 @@ public class CourseApi {
 			.expectBody(CourseResponse.class)
 				.returnResult()
 				.getResponseBody();
+	}
+
+	public URI uriForCourseId(UUID id) {
+		return URI.create(Helpers.baseUri(port) + COURSE_PATH + "/" + id);
 	}
 }
