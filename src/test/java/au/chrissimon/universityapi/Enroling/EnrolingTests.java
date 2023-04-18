@@ -46,18 +46,22 @@ public class EnrolingTests {
         itShouldEnrolMe(enrolmentResponse);
         EnrolmentResponse newEnrolment = enrolmentApi.getEnrolmentFromResponse(enrolmentResponse);
         itShouldAllocateANewEnrolmentId(newEnrolment);
+        itShouldConfirmEnrolmentDetails(student, newEnrolment);
     }
-
+    
     private void itShouldEnrolMe(ResponseSpec enrolmentResponse) {
         enrolmentResponse
             .expectStatus()
             .isCreated();
     }
 
-
     private void itShouldAllocateANewEnrolmentId(EnrolmentResponse enrolment) {
         assertThat(enrolment.getId()).isNotEqualTo(new UUID(0, 0));
         assertThat(enrolment.getId()).isNotNull();
+    }
+
+    private void itShouldConfirmEnrolmentDetails(StudentResponse student, EnrolmentResponse enrolment) {
+        assertThat(enrolment.getStudentId()).isEqualTo(student.getId());
     }
 
 }
