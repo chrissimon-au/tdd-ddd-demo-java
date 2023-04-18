@@ -6,7 +6,7 @@ public class SetupRoomRequest {
 
 	SetupRoomRequest() {}
 
-	SetupRoomRequest(String name, int capacity) {
+	public SetupRoomRequest(String name, int capacity) {
 		this.name = name;
 		this.capacity = capacity;
 	}
