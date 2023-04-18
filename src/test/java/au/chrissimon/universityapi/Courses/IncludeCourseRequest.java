@@ -6,10 +6,9 @@ public class IncludeCourseRequest {
     private String name;
     private UUID roomId;
 
-    public IncludeCourseRequest(String name, UUID roomId) {
+    public IncludeCourseRequest(String name) {
         super();
         setName(name);
-        setRoomId(roomId);
     }
 
     public String getName() {
