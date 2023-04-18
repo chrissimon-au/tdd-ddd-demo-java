@@ -88,4 +88,19 @@ public class CourseTests {
 			.expectStatus()
 			.isOk();
 	}
+
+	@Test
+	public void givenIHaveNotSetupARoom_WhenIIncludeANewCourseInTheCatalog() throws Exception {
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course", null);
+
+		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
+
+		itShouldNotIncludeTheCourse(response);
+	}
+
+	private void itShouldNotIncludeTheCourse(ResponseSpec response) {
+		response
+			.expectStatus()
+			.is4xxClientError();
+	}
 }
