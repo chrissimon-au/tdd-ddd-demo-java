@@ -59,4 +59,8 @@ public class CourseApi {
 				.uri(newCourseLocation)
 			.exchange();
     }
+
+	public ResponseSpec getCourse(UUID courseId) {
+		return getCourse(uriForCourseId(courseId));
+	}
 }
