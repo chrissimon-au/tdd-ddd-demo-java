@@ -38,7 +38,7 @@ public class CourseController {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         courseRepository.save(newCourse);
-        
+
         return ResponseEntity.created(courseUri(newCourse.getId())).body(newCourse);
     }
 

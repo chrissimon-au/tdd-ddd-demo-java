@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 
-import au.chrissimon.universityapi.Rooms.RoomApi;
-import au.chrissimon.universityapi.Rooms.RoomResponse;
 import au.chrissimon.universityapi.Rooms.SetupRoomRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,16 +21,13 @@ public class CourseTests {
 
 	@Autowired
 	private CourseApi courseApi;
-	@Autowired
-	private RoomApi roomApi;
 
 	@Test
 	public void givenIAmAnAdmin_WhenIIncludeANewCourseInTheCatalog() throws Exception {
-		RoomResponse roomResponse = roomApi.getRoomFromResponse(roomApi.setupRoom(new SetupRoomRequest("Test room", 5)));
+		SetupRoomRequest roomRequest = new SetupRoomRequest("Test room", 5);
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course");
 
-		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course", roomResponse.getId());
-
-		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
+		ResponseSpec response = courseApi.includeNewCourseInCatalog(roomRequest, courseRequest);
 
 		itShouldIncludeTheCourseInTheCatalog(response);
 		CourseResponse newCourse = courseApi.getCourseFromResponse(response);
@@ -67,11 +62,10 @@ public class CourseTests {
 	@ValueSource(strings = {"Test Course", "Another Course"})
 	public void givenIHaveIncludedACourse_WhenICheckTheCourseDetails(String courseName)
 	{
-		RoomResponse roomResponse = roomApi.getRoomFromResponse(roomApi.setupRoom(new SetupRoomRequest("Test room", 5)));
+		SetupRoomRequest roomRequest = new SetupRoomRequest("Test room", 5);
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest(courseName);
 
-		IncludeCourseRequest courseRequest = new IncludeCourseRequest(courseName, roomResponse.getId());
-
-		URI newCourseLocation = courseApi.includeNewCourseInCatalog(courseRequest)
+		URI newCourseLocation = courseApi.includeNewCourseInCatalog(roomRequest, courseRequest)
 				.expectBody(CourseResponse.class)
 				.returnResult()
 				.getResponseHeaders().getLocation();
@@ -91,7 +85,7 @@ public class CourseTests {
 
 	@Test
 	public void givenIHaveNotSetupARoom_WhenIIncludeANewCourseInTheCatalog() throws Exception {
-		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course", null);
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course");
 
 		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
 
@@ -106,7 +100,9 @@ public class CourseTests {
 
 	@Test
 	public void givenIHaveAnIncorrectRoomId_WhenIIncludeANewCourseInTheCatalog() throws Exception {
-		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course", UUID.randomUUID());
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course");
+
+		courseRequest.setRoomId(UUID.randomUUID());
 
 		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
 
