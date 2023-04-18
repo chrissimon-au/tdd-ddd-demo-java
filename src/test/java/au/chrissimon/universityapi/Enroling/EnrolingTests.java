@@ -14,6 +14,10 @@ import au.chrissimon.universityapi.Students.RegisterStudentRequest;
 import au.chrissimon.universityapi.Students.StudentApi;
 import au.chrissimon.universityapi.Students.StudentResponse;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.UUID;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class EnrolingTests {
     
@@ -40,6 +44,8 @@ public class EnrolingTests {
         ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
 
         itShouldEnrolMe(enrolmentResponse);
+        EnrolmentResponse newEnrolment = enrolmentApi.getEnrolmentFromResponse(enrolmentResponse);
+        itShouldAllocateANewEnrolmentId(newEnrolment);
     }
 
     private void itShouldEnrolMe(ResponseSpec enrolmentResponse) {
@@ -47,4 +53,11 @@ public class EnrolingTests {
             .expectStatus()
             .isCreated();
     }
+
+
+    private void itShouldAllocateANewEnrolmentId(EnrolmentResponse enrolment) {
+        assertThat(enrolment.getId()).isNotEqualTo(new UUID(0, 0));
+        assertThat(enrolment.getId()).isNotNull();
+    }
+
 }
