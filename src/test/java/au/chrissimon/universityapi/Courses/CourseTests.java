@@ -103,4 +103,13 @@ public class CourseTests {
 			.expectStatus()
 			.is4xxClientError();
 	}
+
+	@Test
+	public void givenIHaveAnIncorrectRoomId_WhenIIncludeANewCourseInTheCatalog() throws Exception {
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course", UUID.randomUUID());
+
+		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
+
+		itShouldNotIncludeTheCourse(response);
+	}
 }
