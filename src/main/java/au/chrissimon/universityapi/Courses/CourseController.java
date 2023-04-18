@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -12,8 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 public class CourseController {
 
     @PostMapping("/courses")
-    public ResponseEntity<Course> includeCourseInCatalog() {
-        Course newCourse = Course.includeInCatalog();
+    public ResponseEntity<Course> includeCourseInCatalog(@RequestBody Course courseRequest) {
+        Course newCourse = Course.includeInCatalog(courseRequest.getName());
         return ResponseEntity.created(courseUri(newCourse.getId())).body(newCourse);
     }
 
