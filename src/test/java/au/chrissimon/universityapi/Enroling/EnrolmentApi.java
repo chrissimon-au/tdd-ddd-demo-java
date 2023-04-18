@@ -22,4 +22,11 @@ public class EnrolmentApi {
                 .uri("/students/" + student.getId() + "/courses")
             .exchange();
     }
+
+    public EnrolmentResponse getEnrolmentFromResponse(ResponseSpec enrolmentResponse) {
+        return enrolmentResponse
+            .expectBody(EnrolmentResponse.class)
+            .returnResult()
+            .getResponseBody();
+    }
 }
