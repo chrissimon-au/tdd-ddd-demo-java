@@ -1,5 +1,7 @@
 package au.chrissimon.universityapi.Enroling;
 
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class EnrolingController {
     
     @PostMapping("/students/{id}/courses")
-    public ResponseEntity<String> enrolStudentInCourse()
+    public ResponseEntity<Enrolment> enrolStudentInCourse()
     {
-        return ResponseEntity.created(null).body("");
+        return ResponseEntity.created(null).body(new Enrolment(UUID.randomUUID()));
     }
 }
