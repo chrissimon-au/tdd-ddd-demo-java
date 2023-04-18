@@ -6,6 +6,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
+
+import au.chrissimon.universityapi.Rooms.RoomApi;
+import au.chrissimon.universityapi.Rooms.RoomResponse;
+import au.chrissimon.universityapi.Rooms.SetupRoomRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,10 +23,14 @@ public class CourseTests {
 
 	@Autowired
 	private CourseApi courseApi;
+	@Autowired
+	private RoomApi roomApi;
 
 	@Test
 	public void givenIAmAnAdmin_WhenIIncludeANewCourseInTheCatalog() throws Exception {
-		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course");
+		RoomResponse roomResponse = roomApi.getRoomFromResponse(roomApi.setupRoom(new SetupRoomRequest("Test room", 5)));
+
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course", roomResponse.getId());
 
 		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
 
@@ -51,13 +60,16 @@ public class CourseTests {
 
 	private void itShouldConfirmCourseDetails(IncludeCourseRequest courseRequest, CourseResponse newCourse) {
 		assertThat(newCourse.getName()).isEqualTo(courseRequest.getName());
+		assertThat(newCourse.getRoomId()).isEqualTo(courseRequest.getRoomId());
 	}
 
 	@ParameterizedTest
 	@ValueSource(strings = {"Test Course", "Another Course"})
 	public void givenIHaveIncludedACourse_WhenICheckTheCourseDetails(String courseName)
 	{
-		IncludeCourseRequest courseRequest = new IncludeCourseRequest(courseName);
+		RoomResponse roomResponse = roomApi.getRoomFromResponse(roomApi.setupRoom(new SetupRoomRequest("Test room", 5)));
+
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest(courseName, roomResponse.getId());
 
 		URI newCourseLocation = courseApi.includeNewCourseInCatalog(courseRequest)
 				.expectBody(CourseResponse.class)
