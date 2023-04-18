@@ -2,9 +2,15 @@ package au.chrissimon.universityapi.Courses;
 
 import java.util.UUID;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Course {
-    private UUID id;
+    private @Id UUID id;
 	private String name;
+
+	Course() { }
 
 	Course(UUID id, String name) {
 		super();
