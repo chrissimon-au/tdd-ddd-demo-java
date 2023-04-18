@@ -19,10 +19,11 @@ public class CourseApi {
 
 	private static final String COURSE_PATH = "/courses";
 
-	public ResponseSpec includeNewCourseInCatalog() {
+	public ResponseSpec includeNewCourseInCatalog(IncludeCourseRequest courseRequest) {
 		return Helpers.newWebClient(port)
 			.post()
 				.uri(COURSE_PATH)
+				.bodyValue(courseRequest)
 			.exchange();
 	}
 

@@ -19,12 +19,15 @@ public class CourseTests {
 
 	@Test
 	public void givenIAmAnAdmin_WhenIIncludeANewCourseInTheCatalog() throws Exception {
-		ResponseSpec response = courseApi.includeNewCourseInCatalog();
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test course");
+
+		ResponseSpec response = courseApi.includeNewCourseInCatalog(courseRequest);
 
 		itShouldIncludeTheCourseInTheCatalog(response);
 		CourseResponse newCourse = courseApi.getCourseFromResponse(response);
 		itShouldAllocateANewId(newCourse);
 		itShouldShowWhereToLocateNewCourse(response, newCourse);
+		itShouldConfirmCourseDetails(courseRequest, newCourse);
 	}
 
 	private void itShouldIncludeTheCourseInTheCatalog(ResponseSpec response) {
@@ -42,5 +45,9 @@ public class CourseTests {
 		response
 			.expectHeader()
 				.location(courseApi.uriForCourseId(newCourse.getId()).toString());
+	}
+
+	private void itShouldConfirmCourseDetails(IncludeCourseRequest courseRequest, CourseResponse newCourse) {
+		assertThat(newCourse.getName()).isEqualTo(courseRequest.getName());
 	}
 }
