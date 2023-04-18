@@ -23,7 +23,7 @@ public class CourseController {
 
     @PostMapping("/courses")
     public ResponseEntity<Course> includeCourseInCatalog(@RequestBody Course courseRequest) {
-        Course newCourse = Course.includeInCatalog(courseRequest.getName());
+        Course newCourse = Course.includeInCatalog(courseRequest.getName(), courseRequest.getRoomId());
         courseRepository.save(newCourse);
         return ResponseEntity.created(courseUri(newCourse.getId())).body(newCourse);
     }
