@@ -4,10 +4,12 @@ import java.util.UUID;
 
 public class Course {
     private UUID id;
+	private String name;
 
-	Course(UUID id) {
+	Course(UUID id, String name) {
 		super();
 		setId(id);
+		setName(name);
 	}
 
 	public UUID getId() {
@@ -18,7 +20,16 @@ public class Course {
 		this.id = id;
 	}
 
-    public static Course includeInCatalog() {
-        return new Course(UUID.randomUUID());
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+    public static Course includeInCatalog(String name) {
+        return new Course(UUID.randomUUID(), name);
     }
 }
