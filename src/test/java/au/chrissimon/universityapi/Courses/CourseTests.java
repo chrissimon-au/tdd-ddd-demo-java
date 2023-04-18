@@ -1,7 +1,8 @@
 package au.chrissimon.universityapi.Courses;
 
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -49,5 +51,29 @@ public class CourseTests {
 
 	private void itShouldConfirmCourseDetails(IncludeCourseRequest courseRequest, CourseResponse newCourse) {
 		assertThat(newCourse.getName()).isEqualTo(courseRequest.getName());
+	}
+
+	@ParameterizedTest
+	@ValueSource(strings = {"Test Course", "Another Course"})
+	public void givenIHaveIncludedACourse_WhenICheckTheCourseDetails(String courseName)
+	{
+		IncludeCourseRequest courseRequest = new IncludeCourseRequest(courseName);
+
+		URI newCourseLocation = courseApi.includeNewCourseInCatalog(courseRequest)
+				.expectBody(CourseResponse.class)
+				.returnResult()
+				.getResponseHeaders().getLocation();
+
+		ResponseSpec response = courseApi.getCourse(newCourseLocation);
+			
+		itShouldFindTheNewCourse(response);
+		CourseResponse course = courseApi.getCourseFromResponse(response);
+		itShouldConfirmCourseDetails(courseRequest, course);
+	}
+
+	private void itShouldFindTheNewCourse(ResponseSpec response) {
+		response
+			.expectStatus()
+			.isOk();
 	}
 }

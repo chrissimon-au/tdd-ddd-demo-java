@@ -37,4 +37,11 @@ public class CourseApi {
 	public URI uriForCourseId(UUID id) {
 		return URI.create(Helpers.baseUri(port) + COURSE_PATH + "/" + id);
 	}
+
+    public ResponseSpec getCourse(URI newCourseLocation) {
+        return Helpers.newWebClient(port)
+			.get()
+				.uri(newCourseLocation)
+			.exchange();
+    }
 }
