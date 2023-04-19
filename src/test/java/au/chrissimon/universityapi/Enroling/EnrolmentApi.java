@@ -40,4 +40,11 @@ public class EnrolmentApi {
     public URI uriForEnrolmentId(UUID id) {
         return URI.create(Helpers.baseUri(port) + ENROLMENT_PATH + "/" + id);
     }
+
+    public ResponseSpec getEnrolment(URI newEnrolmentLocation) {
+        return Helpers.newWebClient(port)
+            .get()
+                .uri(newEnrolmentLocation)
+            .exchange();
+    }
 }
