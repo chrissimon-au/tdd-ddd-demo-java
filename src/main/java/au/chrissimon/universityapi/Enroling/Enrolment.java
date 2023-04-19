@@ -2,8 +2,12 @@ package au.chrissimon.universityapi.Enroling;
 
 import java.util.UUID;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
 public class Enrolment {
-    private UUID id;
+    private @Id UUID id;
     private UUID studentId;
     private UUID courseId;
 
