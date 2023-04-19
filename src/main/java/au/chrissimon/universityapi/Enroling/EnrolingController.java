@@ -10,16 +10,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import au.chrissimon.universityapi.Courses.CourseRepository;
 import au.chrissimon.universityapi.Students.StudentRepository;
 
 @RestController
 public class EnrolingController {
     
     private StudentRepository studentRepository;
+    private CourseRepository courseRepository;
 
-    public EnrolingController(StudentRepository studentRepository) {
+    public EnrolingController(StudentRepository studentRepository, CourseRepository courseRepository) {
         super();
         this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
     }
 
     @PostMapping("/students/{studentId}/courses")
@@ -27,6 +30,9 @@ public class EnrolingController {
     {
         studentRepository.findById(studentId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        courseRepository.findById(enrolment.getCourseId())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         return ResponseEntity.created(null).body(new Enrolment(UUID.randomUUID(), studentId, enrolment.getCourseId()));
     }
