@@ -9,7 +9,6 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import au.chrissimon.universityapi.Courses.CourseApi;
 import au.chrissimon.universityapi.Courses.CourseResponse;
 import au.chrissimon.universityapi.Courses.IncludeCourseRequest;
-import au.chrissimon.universityapi.Rooms.SetupRoomRequest;
 import au.chrissimon.universityapi.Students.RegisterStudentRequest;
 import au.chrissimon.universityapi.Students.StudentApi;
 import au.chrissimon.universityapi.Students.StudentResponse;
@@ -34,10 +33,9 @@ public class EnrolingTests {
     @Test
     public void givenIAmARegisteredStudent_WhenIEnrolInACourse()
     {
-        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
         IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
+        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(courseRequest));
 
         RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
         StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
@@ -76,10 +74,9 @@ public class EnrolingTests {
     @Test
     public void givenIHaveTheWrongStudentId_WhenIEnrolInACourse()
     {
-        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
         IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
+        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(courseRequest));
 
         StudentResponse student = StudentResponse.fakeStudent();
 
@@ -116,10 +113,9 @@ public class EnrolingTests {
     @Test
     public void givenIHaveEnroled_WhenICheckMyEnrolment()
     {
-        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
         IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
+        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(courseRequest));
 
         RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
         StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
