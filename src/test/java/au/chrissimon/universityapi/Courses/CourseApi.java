@@ -48,4 +48,8 @@ public class CourseApi {
 	public ResponseSpec getCourse(UUID courseId) {
 		return getCourse(uriForCourseId(courseId));
 	}
+
+    public CourseResponse includeNewCourseInCatalogAsEntity(IncludeCourseRequest includeCourseRequest) {
+        return getCourseFromResponse(includeNewCourseInCatalog(includeCourseRequest));
+    }
 }

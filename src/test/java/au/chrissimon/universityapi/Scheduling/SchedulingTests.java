@@ -19,6 +19,8 @@ import au.chrissimon.universityapi.Students.StudentResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
+
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class SchedulingTests {
 
@@ -38,14 +40,14 @@ public class SchedulingTests {
     private EnrolmentApi enrolmentApi;
 
     @Test
-    public void givenIAmAnAdmin_WhenIScheduleCourses() {
-        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test Student")));
+    public void givenThereIsASingleCourseAndRoom_WhenIScheduleCourses() {
+        StudentResponse student = studentApi.registerStudentAsEntity(new RegisterStudentRequest("Test Student"));
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(new IncludeCourseRequest("Scheduling Test Course")));
+        CourseResponse course = courseApi.includeNewCourseInCatalogAsEntity(new IncludeCourseRequest("Scheduling Test Course"));
 
         enrolmentApi.enrolStudentInCourse(student, course);
 
-        RoomResponse room = roomApi.getRoomFromResponse(roomApi.setupRoom(new SetupRoomRequest("Scheduling Test Room", 3)));
+        RoomResponse room = roomApi.setupRoomAsEntity(new SetupRoomRequest("Scheduling Test Room", 3));
 
         ResponseSpec response = scheduleApi.schedule();
 
@@ -53,7 +55,7 @@ public class SchedulingTests {
 
         ScheduleResponse schedule = scheduleApi.getScheduleFromResponse(response);
 
-        itShouldListTheScheduledCourses(schedule, course, room);
+        itShouldScheduledCourseToRoom(schedule, course, room);
     }
 
     private void itShouldScheduleTheCourses(ResponseSpec response) {
@@ -62,14 +64,14 @@ public class SchedulingTests {
             .isOk();
     }
 
-    private void itShouldListTheScheduledCourses(ScheduleResponse response, CourseResponse course, RoomResponse room) {
-        assertThat(response.scheduledCourses).hasSize(1);
+    private void itShouldScheduledCourseToRoom(ScheduleResponse response, CourseResponse course, RoomResponse room) {
+        List<CourseResponse> courseInScheduledList = response.scheduledCourses.stream().filter(c -> c.getId().equals(course.getId())).toList();
 
-        response.scheduledCourses.forEach(scheduledCourse -> {
-            assertThat(scheduledCourse.getId()).isEqualTo(course.getId());
-            assertThat(scheduledCourse.getName()).isEqualTo(course.getName());
-            assertThat(scheduledCourse.getRoomId()).isEqualTo(room.getId());
-        });
+        assertThat(courseInScheduledList).hasSize(1);
+           
+        CourseResponse scheduledCourse = courseInScheduledList.get(0);
+            
+        assertThat(scheduledCourse.getName()).isEqualTo(course.getName());
+        assertThat(scheduledCourse.getRoomId()).isEqualTo(room.getId());
     }
-
 }
