@@ -35,4 +35,34 @@ public class SchedulerTests {
             assertThat(c.getRoomId()).isEqualTo(room.getId());
         });
     }
+
+    @Test
+    public void givenTwoCoursesTwoRooms_whenScheduling() {
+    
+        Scheduler scheduler = new Scheduler();
+        
+        Course course1 = Course.includeInCatalog("1");
+        CourseEnrolments courseEnrolment1 = new CourseEnrolments(course1, 4);
+        Course course2 = Course.includeInCatalog("2");
+        CourseEnrolments courseEnrolment2 = new CourseEnrolments(course2, 2);
+
+        Collection<CourseEnrolments> coursesEnrolments = List.of(courseEnrolment1, courseEnrolment2);
+
+        Room room1 = new Room(UUID.randomUUID(), "1", 2);
+        Room room2 = new Room(UUID.randomUUID(), "2", 4);
+        Collection<Room> rooms = List.of(room1, room2);
+
+        Schedule schedule = scheduler.scheduleCourses(coursesEnrolments, rooms);
+
+        Collection<Course> scheduledCourses = schedule.getScheduledCourses();
+
+        assertThat(scheduledCourses.size()).isEqualTo(2);
+
+        assertThat(scheduledCourses).contains(course1);
+        assertThat(scheduledCourses).contains(course2);
+
+        assertThat(course1.getRoomId()).isEqualTo(room2.getId());
+        assertThat(course2.getRoomId()).isEqualTo(room1.getId());
+    }
+
 }
