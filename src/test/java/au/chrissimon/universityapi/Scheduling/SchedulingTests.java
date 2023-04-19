@@ -74,4 +74,35 @@ public class SchedulingTests {
         assertThat(scheduledCourse.getName()).isEqualTo(course.getName());
         assertThat(scheduledCourse.getRoomId()).isEqualTo(room.getId());
     }
+
+    @Test
+    public void givenThereAreMultiplesCoursesAndRooms_WhenIScheduleCourses() {
+        StudentResponse student1 = studentApi.registerStudentAsEntity(new RegisterStudentRequest("Test Student1"));
+        StudentResponse student2 = studentApi.registerStudentAsEntity(new RegisterStudentRequest("Test Student2"));
+        StudentResponse student3 = studentApi.registerStudentAsEntity(new RegisterStudentRequest("Test Student3"));
+        StudentResponse student4 = studentApi.registerStudentAsEntity(new RegisterStudentRequest("Test Student4"));
+
+        CourseResponse course1 = courseApi.includeNewCourseInCatalogAsEntity(new IncludeCourseRequest("Scheduling Test Course1"));
+        CourseResponse course2 = courseApi.includeNewCourseInCatalogAsEntity(new IncludeCourseRequest("Scheduling Test Course2"));
+
+        enrolmentApi.enrolStudentInCourse(student1, course1);
+        enrolmentApi.enrolStudentInCourse(student2, course1);
+        enrolmentApi.enrolStudentInCourse(student3, course1);
+        enrolmentApi.enrolStudentInCourse(student4, course1);
+
+        enrolmentApi.enrolStudentInCourse(student1, course2);
+        enrolmentApi.enrolStudentInCourse(student2, course2);
+
+        RoomResponse room1 = roomApi.setupRoomAsEntity(new SetupRoomRequest("Scheduling Test Room", 2));
+        RoomResponse room2 = roomApi.setupRoomAsEntity(new SetupRoomRequest("Scheduling Test Room", 4));
+
+        ResponseSpec response = scheduleApi.schedule();
+
+        itShouldScheduleTheCourses(response);
+
+        ScheduleResponse schedule = scheduleApi.getScheduleFromResponse(response);
+
+        itShouldScheduledCourseToRoom(schedule, course1, room2);
+        itShouldScheduledCourseToRoom(schedule, course2, room1);
+    }
 }
