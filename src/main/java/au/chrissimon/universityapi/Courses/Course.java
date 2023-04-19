@@ -9,7 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-public class Course {
+class Course {
     private @Id UUID id;
     private String name;
     @NotNull
