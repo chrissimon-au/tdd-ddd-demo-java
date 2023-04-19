@@ -13,22 +13,24 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import au.chrissimon.universityapi.Rooms.Room;
-import au.chrissimon.universityapi.Rooms.RoomRepository;
 import au.chrissimon.universityapi.Students.StudentRepository;
 
 @RestController
 public class EnrolingController {
     
-    private StudentRepository studentRepository;
-    private RoomRepository roomRepository;
     private EnrolmentRepository enrolmentRepository;
+    private Enroler enroler;
+    private StudentRepository studentRepository;
 
-    public EnrolingController(StudentRepository studentRepository, RoomRepository roomRepository, EnrolmentRepository enrolmentRepository) {
+    public EnrolingController(
+        EnrolmentRepository enrolmentRepository,
+        StudentRepository studentRepository,
+        Enroler enroler
+    ) {
         super();
-        this.studentRepository = studentRepository;
-        this.roomRepository = roomRepository;
         this.enrolmentRepository = enrolmentRepository;
+        this.studentRepository = studentRepository;
+        this.enroler = enroler;
     }
 
     @PostMapping("/students/{studentId}/courses")
@@ -37,16 +39,8 @@ public class EnrolingController {
         studentRepository.findById(studentId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Room room = roomRepository.findForEnrolment(enrolment)
+        Enrolment newEnrolment = enroler.enrolIfEnoughCapacity(studentId, enrolment)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-
-        long numEnrolments = enrolmentRepository.countByCourseId(enrolment.getCourseId());
-
-        if (room.wouldEnrolmentExceedCapacity(numEnrolments)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-
-        Enrolment newEnrolment = new Enrolment(UUID.randomUUID(), studentId, enrolment.getCourseId());
 
         enrolmentRepository.save(newEnrolment);
 
