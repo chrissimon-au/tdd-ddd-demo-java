@@ -10,7 +10,7 @@ public class Course {
     private String name;
     private UUID roomId;
 
-    Course() { }
+    public Course() { }
 
     Course(UUID id, String name) {
         super();
