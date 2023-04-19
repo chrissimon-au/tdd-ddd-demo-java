@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,11 +21,13 @@ public class EnrolingController {
     
     private StudentRepository studentRepository;
     private CourseRepository courseRepository;
+    private EnrolmentRepository enrolmentRepository;
 
-    public EnrolingController(StudentRepository studentRepository, CourseRepository courseRepository) {
+    public EnrolingController(StudentRepository studentRepository, CourseRepository courseRepository, EnrolmentRepository enrolmentRepository) {
         super();
         this.studentRepository = studentRepository;
         this.courseRepository = courseRepository;
+        this.enrolmentRepository = enrolmentRepository;
     }
 
     @PostMapping("/students/{studentId}/courses")
@@ -37,6 +40,9 @@ public class EnrolingController {
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         Enrolment newEnrolment = new Enrolment(UUID.randomUUID(), studentId, enrolment.getCourseId());
+
+        enrolmentRepository.save(newEnrolment);
+
         return ResponseEntity.created(enrolmentUri(newEnrolment.getId())).body(newEnrolment);
     }
 
@@ -46,5 +52,11 @@ public class EnrolingController {
             .replacePath("enrolments/{id}")
             .buildAndExpand(id)
             .toUri();
+    }
+
+    @GetMapping("/enrolments/{id}")
+    public Enrolment enrolStudentInCourse(@PathVariable UUID id) {
+        return enrolmentRepository.findById(id)
+            .orElseThrow();
     }
 }
