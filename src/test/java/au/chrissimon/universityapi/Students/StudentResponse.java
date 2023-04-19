@@ -8,6 +8,11 @@ public class StudentResponse	{
 	
 	StudentResponse() {}
 
+	StudentResponse(UUID id) {
+		super();
+		setId(id);
+	}
+
 	public UUID getId() {
 		return id;
 	}
@@ -22,5 +27,9 @@ public class StudentResponse	{
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public static StudentResponse fakeStudent() {
+		return new StudentResponse(UUID.randomUUID());
 	}
 }

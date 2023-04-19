@@ -65,4 +65,24 @@ public class EnrolingTests {
         assertThat(enrolment.getCourseId()).isEqualTo(course.getId());
     }
 
+    @Test
+    public void givenIHaveTheWrongStudentId_WhenIEnrolInACourse()
+    {
+        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
+        IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
+
+        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
+
+        StudentResponse student = StudentResponse.fakeStudent();
+
+        ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
+
+        itShouldNotEnrolMe(enrolmentResponse);
+    }
+
+    private void itShouldNotEnrolMe(ResponseSpec enrolmentResponse) {
+        enrolmentResponse
+            .expectStatus()
+            .isNotFound();
+    }
 }
