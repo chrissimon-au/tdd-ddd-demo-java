@@ -19,14 +19,15 @@ import au.chrissimon.universityapi.Students.StudentRepository;
 public class EnrolingController {
     
     private EnrolmentRepository enrolmentRepository;
-    private Enroler enroler;
     private StudentRepository studentRepository;
+    private Enroler enroler;
 
     public EnrolingController(
         EnrolmentRepository enrolmentRepository,
         StudentRepository studentRepository,
         Enroler enroler
-    ) {
+    )
+    {
         super();
         this.enrolmentRepository = enrolmentRepository;
         this.studentRepository = studentRepository;
@@ -39,7 +40,7 @@ public class EnrolingController {
         studentRepository.findById(studentId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Enrolment newEnrolment = enroler.enrolIfEnoughCapacity(studentId, enrolment)
+        Enrolment newEnrolment = enroler.enrol(studentId, enrolment)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
         enrolmentRepository.save(newEnrolment);
