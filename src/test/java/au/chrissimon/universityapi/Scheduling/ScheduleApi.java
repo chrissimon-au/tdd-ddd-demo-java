@@ -20,4 +20,11 @@ public class ScheduleApi {
                 .uri("/schedules")
             .exchange();
     }
+
+    public ScheduleResponse getScheduleFromResponse(ResponseSpec response) {
+        return response
+            .expectBody(ScheduleResponse.class)
+            .returnResult()
+            .getResponseBody();
+    }
 }
