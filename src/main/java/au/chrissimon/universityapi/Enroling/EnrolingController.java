@@ -40,7 +40,7 @@ public class EnrolingController {
         Room room = roomRepository.findForEnrolment(enrolment)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        long numEnrolments = enrolmentRepository.count((s, cq, cb) -> cb.equal(s.get("courseId"), enrolment.getCourseId()));
+        long numEnrolments = enrolmentRepository.countByCourseId(enrolment.getCourseId());
 
         if (numEnrolments + 1 > room.getCapacity()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
