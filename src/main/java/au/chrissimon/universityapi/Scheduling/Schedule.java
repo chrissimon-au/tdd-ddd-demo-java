@@ -1,17 +1,17 @@
 package au.chrissimon.universityapi.Scheduling;
 
-import java.util.Set;
+import java.util.Collection;
 
 import au.chrissimon.universityapi.Courses.Course;
 
 public class Schedule {
-    private Set<Course> scheduledCourses;
+    private Collection<Course> scheduledCourses;
 
-    public Set<Course> getScheduledCourses() {
+    public Collection<Course> getScheduledCourses() {
         return scheduledCourses;
     }
 
-    public void setScheduledCourses(Set<Course> scheduledCourses) {
+    public void setScheduledCourses(Collection<Course> scheduledCourses) {
         this.scheduledCourses = scheduledCourses;
     }
 }
