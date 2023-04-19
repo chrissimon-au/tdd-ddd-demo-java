@@ -1,5 +1,6 @@
 package au.chrissimon.universityapi.Rooms;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
@@ -48,7 +49,10 @@ public class Room {
         return new Room(UUID.randomUUID(), roomRequest.getName(), roomRequest.getCapacity());
     }
 
-    public boolean wouldEnrolmentExceedCapacity(long numEnrolments) {
-        return numEnrolments + 1 > getCapacity();
+    public Optional<Room> roomIfCapacityForEnrolment(long numEnrolments) {
+        if (numEnrolments + 1 > getCapacity()) {
+            return Optional.empty();
+        };
+        return Optional.of(this);
     }
 }
