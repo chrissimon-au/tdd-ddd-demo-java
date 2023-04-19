@@ -1,5 +1,8 @@
 package au.chrissimon.universityapi.Enroling;
 
+import java.net.URI;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,8 @@ public class EnrolmentApi {
     @Value(value="${local.server.port}")
     private int port;
 
+    public static final String ENROLMENT_PATH = "/enrolments";
+
     public ResponseSpec enrolStudentInCourse(StudentResponse student, CourseResponse course) {
         EnrolStudentInCourseRequest enrolStudentInCourseRequest = new EnrolStudentInCourseRequest(course.getId());
         return Helpers.newWebClient(port)
@@ -30,5 +35,9 @@ public class EnrolmentApi {
             .expectBody(EnrolmentResponse.class)
             .returnResult()
             .getResponseBody();
+    }
+
+    public URI uriForEnrolmentId(UUID id) {
+        return URI.create(Helpers.baseUri(port) + ENROLMENT_PATH + "/" + id);
     }
 }
