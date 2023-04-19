@@ -17,6 +17,11 @@ public class CourseResponse {
 
     public CourseResponse () { }
 
+    public CourseResponse (UUID id) {
+        super();
+        setId(id);
+    }
+
     public UUID getId() {
         return id;
     }
@@ -31,5 +36,9 @@ public class CourseResponse {
 
     public void setRoomId(UUID roomId) {
         this.roomId = roomId;
+    }
+
+    public static CourseResponse fakeCourse() {
+        return new CourseResponse(UUID.randomUUID());
     }
 }
