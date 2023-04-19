@@ -16,6 +16,7 @@ import au.chrissimon.universityapi.Students.StudentResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.URI;
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -110,5 +111,35 @@ public class EnrolingTests {
         enrolmentResponse
             .expectStatus()
             .isBadRequest();
+    }
+
+    @Test
+    public void givenIHaveEnroled_WhenICheckMyEnrolment()
+    {
+        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 5);
+        IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
+
+        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
+
+        RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
+        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
+
+        URI newEnrolmentLocation = enrolmentApi.enrolStudentInCourse(student, course)
+            .expectBody(EnrolmentResponse.class)
+            .returnResult()
+            .getResponseHeaders().getLocation();
+
+        ResponseSpec response = enrolmentApi.getEnrolment(newEnrolmentLocation);
+
+        EnrolmentResponse enrolment = enrolmentApi.getEnrolmentFromResponse(response);
+
+        itShouldFindTheEnrolment(response);
+        itShouldConfirmEnrolmentDetails(student, course, enrolment);
+    }
+
+    public void itShouldFindTheEnrolment(ResponseSpec response) {
+        response
+            .expectStatus()
+            .isOk();
     }
 }
