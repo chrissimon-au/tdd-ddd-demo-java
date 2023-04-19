@@ -47,4 +47,8 @@ public class Room {
     public static Room setupNew(Room roomRequest) {
         return new Room(UUID.randomUUID(), roomRequest.getName(), roomRequest.getCapacity());
     }
+
+    public boolean wouldEnrolmentExceedCapacity(long numEnrolments) {
+        return numEnrolments + 1 > getCapacity();
+    }
 }
