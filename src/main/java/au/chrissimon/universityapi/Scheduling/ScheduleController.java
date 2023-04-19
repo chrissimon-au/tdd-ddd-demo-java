@@ -39,10 +39,6 @@ public class ScheduleController {
 
         course.setRoomId(room.getId());
 
-        Schedule schedule = new Schedule();
-        Set<Course> scheduledCourses = Set.of(course);
-        schedule.setScheduledCourses(scheduledCourses);
-
-        return ResponseEntity.ok().body(schedule);
+        return ResponseEntity.ok().body(new Schedule(Set.of(course)));
     }
 }

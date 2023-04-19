@@ -3,36 +3,46 @@ package au.chrissimon.universityapi.Scheduling;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 import au.chrissimon.universityapi.Courses.Course;
 import au.chrissimon.universityapi.Rooms.Room;
 
 public class Scheduler {
 
+    private Optional<Room> smallestAvailableRoom(List<Room> availableRooms, int requiredCapacity) {
+        return availableRooms.stream()
+            .filter(r -> r.getCapacity() >= requiredCapacity)
+            .findFirst();
+    }
+
+    private Optional<Course> assignCourseToRoom(CourseEnrolments courseEnrolment, List<Room> availableRooms) {
+        return smallestAvailableRoom(availableRooms, courseEnrolment.getEnrolmentCount())
+                .map(r -> {
+                    courseEnrolment.getCourse().setRoomId(r.getId());
+                    availableRooms.remove(r);
+                    return courseEnrolment.getCourse();
+                });
+    }
+
+    private Collection<Course> assignCoursesToRooms(List<CourseEnrolments> courses, List<Room> availableRooms) {
+        return courses
+            .stream()
+            .map(ce -> assignCourseToRoom(ce, availableRooms))
+            .flatMap(Optional::stream)
+            .toList();
+    }
+
     public Schedule scheduleCourses(Collection<CourseEnrolments> courseEnrolments, Collection<Room> rooms) {
-        Schedule schedule = new Schedule();
-        Collection<Course> scheduledCourses = new HashSet<Course>();
-        schedule.setScheduledCourses(scheduledCourses);
-        List<CourseEnrolments> courses = new ArrayList<CourseEnrolments>(courseEnrolments);
-        Collections.sort(courses);
+        List<CourseEnrolments> coursesByMostPopular = new ArrayList<CourseEnrolments>(courseEnrolments);
+        Collections.sort(coursesByMostPopular);
 
         List<Room> availableRooms = new ArrayList<Room>(rooms);
-        Collections.sort(availableRooms);
         
-        courses.forEach(ce -> {
-            availableRooms.stream()
-                .filter(r -> r.getCapacity() >= ce.getEnrolmentCount())
-                .findFirst()
-                .ifPresent(r -> {
-                    ce.getCourse().setRoomId(r.getId());
-                    availableRooms.remove(r);
-                });
+        Collection<Course> scheduledCourses = assignCoursesToRooms(coursesByMostPopular, availableRooms);
 
-            scheduledCourses.add(ce.getCourse());
-        });
-        return schedule;
+        return new Schedule(scheduledCourses);
     }
     
 }

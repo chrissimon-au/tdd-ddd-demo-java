@@ -7,6 +7,11 @@ import au.chrissimon.universityapi.Courses.Course;
 public class Schedule {
     private Collection<Course> scheduledCourses;
 
+    public Schedule(Collection<Course> scheduledCourses) {
+        super();
+        setScheduledCourses(scheduledCourses);
+    }
+
     public Collection<Course> getScheduledCourses() {
         return scheduledCourses;
     }
