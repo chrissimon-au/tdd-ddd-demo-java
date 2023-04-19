@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
 @Entity
-public class Room {
+public class Room implements Comparable<Room> {
     private @Id UUID id;
     private String name;
     private int capacity;
@@ -54,5 +54,10 @@ public class Room {
             return Optional.empty();
         };
         return Optional.of(this);
+    }
+
+    @Override
+    public int compareTo(Room arg) {
+        return arg.getCapacity() - this.getCapacity();
     }
 }

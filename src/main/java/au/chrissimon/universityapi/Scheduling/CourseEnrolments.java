@@ -2,7 +2,7 @@ package au.chrissimon.universityapi.Scheduling;
 
 import au.chrissimon.universityapi.Courses.Course;
 
-public class CourseEnrolments {
+public class CourseEnrolments implements Comparable<CourseEnrolments> {
     private Course course;
     private int enrolmentCount;
 
@@ -25,5 +25,10 @@ public class CourseEnrolments {
 
     public void setEnrolmentCount(int enrolmentCount) {
         this.enrolmentCount = enrolmentCount;
+    }
+
+    @Override
+    public int compareTo(CourseEnrolments arg) {
+        return arg.getEnrolmentCount() - this.getEnrolmentCount();
     }
 }
