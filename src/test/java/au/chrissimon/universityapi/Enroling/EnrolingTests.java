@@ -77,12 +77,31 @@ public class EnrolingTests {
 
         ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
 
-        itShouldNotEnrolMe(enrolmentResponse);
+        itShouldNotEnrolMeWithNotFound(enrolmentResponse);
     }
 
-    private void itShouldNotEnrolMe(ResponseSpec enrolmentResponse) {
+    private void itShouldNotEnrolMeWithNotFound(ResponseSpec enrolmentResponse) {
         enrolmentResponse
             .expectStatus()
             .isNotFound();
+    }
+
+    @Test
+    public void givenIHaveTheWrongCourseId_WhenIEnrolInACourse()
+    {
+        CourseResponse course = CourseResponse.fakeCourse();
+
+        RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
+        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
+
+        ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
+
+        itShouldNotEnrolMeWithError(enrolmentResponse);
+    }
+
+    private void itShouldNotEnrolMeWithError(ResponseSpec enrolmentResponse) {
+        enrolmentResponse
+            .expectStatus()
+            .isBadRequest();
     }
 }
