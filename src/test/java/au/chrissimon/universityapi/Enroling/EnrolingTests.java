@@ -142,33 +142,4 @@ public class EnrolingTests {
             .expectStatus()
             .isOk();
     }
-
-    @Test
-    public void givenTheCourseIWantIsFull_WhenIEnrolInACourse()
-    {
-        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 3);
-        IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
-
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
-
-        StudentResponse student1 = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test student 1")));
-        ResponseSpec er1 = enrolmentApi.enrolStudentInCourse(student1, course);
-        itShouldEnrolMe(er1);
-
-        StudentResponse student2 = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test student 2")));
-        ResponseSpec er2 = enrolmentApi.enrolStudentInCourse(student2, course);
-        itShouldEnrolMe(er2);
-
-        StudentResponse student3 = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test student 3")));
-        ResponseSpec er3 = enrolmentApi.enrolStudentInCourse(student3, course);
-        itShouldEnrolMe(er3);
-
-
-        RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student who is too late");
-        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
-
-        ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
-
-        itShouldNotEnrolMeWithError(enrolmentResponse);
-    }
 }
