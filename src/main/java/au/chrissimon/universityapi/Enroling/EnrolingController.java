@@ -42,7 +42,7 @@ public class EnrolingController {
 
         long numEnrolments = enrolmentRepository.countByCourseId(enrolment.getCourseId());
 
-        if (numEnrolments + 1 > room.getCapacity()) {
+        if (room.wouldEnrolmentExceedCapacity(numEnrolments)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
