@@ -1,27 +1,21 @@
 package au.chrissimon.universityapi.Courses;
 
-import java.util.Optional;
 import java.util.UUID;
-
-import au.chrissimon.universityapi.Rooms.Room;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotNull;
 
 @Entity
 public class Course {
     private @Id UUID id;
     private String name;
-    @NotNull
     private UUID roomId;
 
     Course() { }
 
-    Course(UUID id, String name, UUID roomId) {
+    Course(UUID id, String name) {
         super();
         setId(id);
         setName(name);
-        setRoomId(roomId);
     }
 
     public UUID getId() {
@@ -40,11 +34,8 @@ public class Course {
         this.name = name;
     }
 
-    public static Optional<Course> includeInCatalog(String name, Optional<Room> room) {
-        return room
-            .map(r -> {
-                return new Course(UUID.randomUUID(), name, r.getId());
-            });
+    public static Course includeInCatalog(String name) {
+        return new Course(UUID.randomUUID(), name);
     }
 
     public UUID getRoomId() {

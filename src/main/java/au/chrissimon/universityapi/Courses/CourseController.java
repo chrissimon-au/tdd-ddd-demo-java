@@ -1,7 +1,6 @@
 package au.chrissimon.universityapi.Courses;
 
 import java.net.URI;
-import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
@@ -14,28 +13,21 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import au.chrissimon.universityapi.Rooms.Room;
-import au.chrissimon.universityapi.Rooms.RoomRepository;
 import jakarta.validation.Valid;
 
 @RestController
 public class CourseController {
 
     private CourseRepository courseRepository;
-    private RoomRepository roomRepository;
 
-    public CourseController(CourseRepository courseRepository, RoomRepository roomRepository) {
+    public CourseController(CourseRepository courseRepository) {
         super();
         this.courseRepository = courseRepository;
-        this.roomRepository = roomRepository;
     }
 
     @PostMapping("/courses")
     public ResponseEntity<Course> includeCourseInCatalog(@Valid @RequestBody Course courseRequest) {
-        Optional<Room> room = roomRepository.findById(courseRequest.getRoomId());
-
-        Course newCourse = Course.includeInCatalog(courseRequest.getName(), room)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
+        Course newCourse = Course.includeInCatalog(courseRequest.getName());
 
         courseRepository.save(newCourse);
 
