@@ -31,6 +31,10 @@ public class StudentApi {
 			.exchange();
 	}
 
+    public StudentResponse registerStudentAsEntity(RegisterStudentRequest studentRequest) {
+        return getStudentFromResponse(registerStudent(studentRequest));
+    }
+
     public ResponseSpec getStudent(UUID id) {
         return getStudent(uriForStudentId(id));
     }

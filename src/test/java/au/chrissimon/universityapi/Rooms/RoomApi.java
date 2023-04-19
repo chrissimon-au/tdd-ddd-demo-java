@@ -48,4 +48,8 @@ public class RoomApi {
     public ResponseSpec getRoom(UUID id) {
         return getRoom(uriForRoomId(id));
     }
+
+    public RoomResponse setupRoomAsEntity(SetupRoomRequest setupRoomRequest) {
+        return getRoomFromResponse(setupRoom(setupRoomRequest));
+    }
 }

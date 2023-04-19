@@ -35,10 +35,10 @@ public class EnrolingTests {
     {
         IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(courseRequest));
+        CourseResponse course = courseApi.includeNewCourseInCatalogAsEntity(courseRequest);
 
         RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
-        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
+        StudentResponse student = studentApi.registerStudentAsEntity(studentRequest);
 
         ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
 
@@ -76,7 +76,7 @@ public class EnrolingTests {
     {
         IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(courseRequest));
+        CourseResponse course = courseApi.includeNewCourseInCatalogAsEntity(courseRequest);
 
         StudentResponse student = StudentResponse.fakeStudent();
 
@@ -97,7 +97,7 @@ public class EnrolingTests {
         CourseResponse course = CourseResponse.fakeCourse();
 
         RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
-        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
+        StudentResponse student = studentApi.registerStudentAsEntity(studentRequest);
 
         ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
 
@@ -115,10 +115,10 @@ public class EnrolingTests {
     {
         IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
 
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(courseRequest));
+        CourseResponse course = courseApi.includeNewCourseInCatalogAsEntity(courseRequest);
 
         RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student");
-        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
+        StudentResponse student = studentApi.registerStudentAsEntity(studentRequest);
 
         URI newEnrolmentLocation = enrolmentApi.enrolStudentInCourse(student, course)
             .expectBody(EnrolmentResponse.class)
