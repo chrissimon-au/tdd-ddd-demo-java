@@ -13,38 +13,40 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import au.chrissimon.universityapi.Courses.Course;
-import au.chrissimon.universityapi.Courses.CourseRepository;
 import au.chrissimon.universityapi.Rooms.Room;
 import au.chrissimon.universityapi.Rooms.RoomRepository;
-import au.chrissimon.universityapi.Students.Student;
 import au.chrissimon.universityapi.Students.StudentRepository;
 
 @RestController
 public class EnrolingController {
     
     private StudentRepository studentRepository;
-    private CourseRepository courseRepository;
+    private RoomRepository roomRepository;
     private EnrolmentRepository enrolmentRepository;
 
-    public EnrolingController(StudentRepository studentRepository, CourseRepository courseRepository, EnrolmentRepository enrolmentRepository) {
+    public EnrolingController(StudentRepository studentRepository, RoomRepository roomRepository, EnrolmentRepository enrolmentRepository) {
         super();
         this.studentRepository = studentRepository;
-        this.courseRepository = courseRepository;
+        this.roomRepository = roomRepository;
         this.enrolmentRepository = enrolmentRepository;
     }
 
     @PostMapping("/students/{studentId}/courses")
     public ResponseEntity<Enrolment> enrolStudentInCourse(@PathVariable UUID studentId, @RequestBody Enrolment enrolment)
     {
-        Student student = studentRepository.findById(studentId)
+        studentRepository.findById(studentId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Course course = courseRepository.findById(enrolment.getCourseId())
+        Room room = roomRepository.findForEnrolment(enrolment)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        // RED: doesn't build.  Illustrating ideal expression of ub language
-        Enrolment newEnrolment = course.Enrol(student);
+        long numEnrolments = enrolmentRepository.countByCourseId(enrolment.getCourseId());
+
+        if (room.wouldEnrolmentExceedCapacity(numEnrolments)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Enrolment newEnrolment = new Enrolment(UUID.randomUUID(), studentId, enrolment.getCourseId());
 
         enrolmentRepository.save(newEnrolment);
 
