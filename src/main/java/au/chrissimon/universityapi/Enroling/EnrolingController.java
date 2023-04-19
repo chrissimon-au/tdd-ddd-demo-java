@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import au.chrissimon.universityapi.Courses.Course;
-import au.chrissimon.universityapi.Courses.CourseRepository;
 import au.chrissimon.universityapi.Rooms.Room;
 import au.chrissimon.universityapi.Rooms.RoomRepository;
 import au.chrissimon.universityapi.Students.StudentRepository;
@@ -23,14 +21,12 @@ import au.chrissimon.universityapi.Students.StudentRepository;
 public class EnrolingController {
     
     private StudentRepository studentRepository;
-    private CourseRepository courseRepository;
     private RoomRepository roomRepository;
     private EnrolmentRepository enrolmentRepository;
 
-    public EnrolingController(StudentRepository studentRepository, CourseRepository courseRepository, RoomRepository roomRepository, EnrolmentRepository enrolmentRepository) {
+    public EnrolingController(StudentRepository studentRepository, RoomRepository roomRepository, EnrolmentRepository enrolmentRepository) {
         super();
         this.studentRepository = studentRepository;
-        this.courseRepository = courseRepository;
         this.roomRepository = roomRepository;
         this.enrolmentRepository = enrolmentRepository;
     }
@@ -41,13 +37,10 @@ public class EnrolingController {
         studentRepository.findById(studentId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
-        Course course = courseRepository.findById(enrolment.getCourseId())
+        Room room = roomRepository.findForEnrolment(enrolment)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
 
-        Room room = roomRepository.findById(course.getRoomId())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
-
-        long numEnrolments = enrolmentRepository.count((s, cq, cb) -> cb.equal(s.get("courseId"), course.getId()));
+        long numEnrolments = enrolmentRepository.count((s, cq, cb) -> cb.equal(s.get("courseId"), enrolment.getCourseId()));
 
         if (numEnrolments + 1 > room.getCapacity()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
