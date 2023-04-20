@@ -22,7 +22,7 @@ public class Student {
         return id;
     }
 
-    public void setId(UUID id) {
+    private void setId(UUID id) {
         this.id = id;
     }
 
@@ -30,7 +30,7 @@ public class Student {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 

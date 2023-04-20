@@ -23,7 +23,7 @@ public class Scheduler {
     private Optional<Course> assignCourseToRoom(CourseEnrolments courseEnrolment, List<Room> availableRooms) {
         return smallestAvailableRoom(availableRooms, courseEnrolment.getEnrolmentCount())
                 .map(r -> {
-                    courseEnrolment.getCourse().setRoomId(r.getId());
+                    courseEnrolment.getCourse().assignTo(r);
                     availableRooms.remove(r);
                     return courseEnrolment.getCourse();
                 });
