@@ -4,9 +4,9 @@ import au.chrissimon.universityapi.Courses.Course;
 
 public class CourseEnrolments implements Comparable<CourseEnrolments> {
     private Course course;
-    private int enrolmentCount;
+    private Long enrolmentCount;
 
-    public CourseEnrolments(Course course, int enrolmentCount) {
+    public CourseEnrolments(Course course, Long enrolmentCount) {
         super();
         setCourse(course);
         setEnrolmentCount(enrolmentCount);
@@ -19,16 +19,16 @@ public class CourseEnrolments implements Comparable<CourseEnrolments> {
     public void setCourse(Course course) {
         this.course = course;
     }
-    public int getEnrolmentCount() {
+    public Long getEnrolmentCount() {
         return enrolmentCount;
     }
 
-    public void setEnrolmentCount(int enrolmentCount) {
+    public void setEnrolmentCount(Long enrolmentCount) {
         this.enrolmentCount = enrolmentCount;
     }
 
     @Override
     public int compareTo(CourseEnrolments arg) {
-        return arg.getEnrolmentCount() - this.getEnrolmentCount();
+        return (int) (arg.getEnrolmentCount() - this.getEnrolmentCount());
     }
 }

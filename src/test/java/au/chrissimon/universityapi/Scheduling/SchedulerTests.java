@@ -19,7 +19,7 @@ public class SchedulerTests {
         Scheduler scheduler = new Scheduler();
         
         Course course = Course.includeInCatalog("Test");
-        CourseEnrolments courseEnrolments = new CourseEnrolments(course, 2);
+        CourseEnrolments courseEnrolments = new CourseEnrolments(course, 2L);
         Collection<CourseEnrolments> coursesEnrolments = List.of(courseEnrolments);
         Room room = new Room(UUID.randomUUID(), "Test", 2);
         Collection<Room> rooms = List.of(room);
@@ -42,9 +42,9 @@ public class SchedulerTests {
         Scheduler scheduler = new Scheduler();
         
         Course course1 = Course.includeInCatalog("1");
-        CourseEnrolments courseEnrolment1 = new CourseEnrolments(course1, 4);
+        CourseEnrolments courseEnrolment1 = new CourseEnrolments(course1, 4L);
         Course course2 = Course.includeInCatalog("2");
-        CourseEnrolments courseEnrolment2 = new CourseEnrolments(course2, 2);
+        CourseEnrolments courseEnrolment2 = new CourseEnrolments(course2, 2L);
 
         Collection<CourseEnrolments> coursesEnrolments = List.of(courseEnrolment1, courseEnrolment2);
 
@@ -64,5 +64,4 @@ public class SchedulerTests {
         assertThat(course1.getRoomId()).isEqualTo(room2.getId());
         assertThat(course2.getRoomId()).isEqualTo(room1.getId());
     }
-
 }

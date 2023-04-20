@@ -6,12 +6,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import au.chrissimon.universityapi.Courses.Course;
 import au.chrissimon.universityapi.Rooms.Room;
 
+@Component
 public class Scheduler {
 
-    private Optional<Room> smallestAvailableRoom(List<Room> availableRooms, int requiredCapacity) {
+    private Optional<Room> smallestAvailableRoom(List<Room> availableRooms, Long requiredCapacity) {
         return availableRooms.stream()
             .filter(r -> r.getCapacity() >= requiredCapacity)
             .findFirst();
