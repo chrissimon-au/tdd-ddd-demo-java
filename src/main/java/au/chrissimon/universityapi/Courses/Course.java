@@ -1,6 +1,8 @@
 package au.chrissimon.universityapi.Courses;
 
 import java.util.UUID;
+
+import au.chrissimon.universityapi.Rooms.Room;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 
@@ -22,7 +24,7 @@ public class Course {
         return id;
     }
 
-    public void setId(UUID id) {
+    private void setId(UUID id) {
         this.id = id;
     }
 
@@ -30,19 +32,23 @@ public class Course {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
-    }
-
-    public static Course includeInCatalog(String name) {
-        return new Course(UUID.randomUUID(), name);
     }
 
     public UUID getRoomId() {
         return roomId;
     }
 
-    public void setRoomId(UUID roomId) {
+    private void setRoomId(UUID roomId) {
         this.roomId = roomId;
+    }
+
+    public static Course includeInCatalog(String name) {
+        return new Course(UUID.randomUUID(), name);
+    }
+
+    public void assignTo(Room r) {
+        setRoomId(r.getId());
     }
 }

@@ -25,7 +25,7 @@ public class Room {
         return id;
     }
 
-    public void setId(UUID id) {
+    private void setId(UUID id) {
         this.id = id;
     }
 
@@ -33,7 +33,7 @@ public class Room {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -41,7 +41,7 @@ public class Room {
         return capacity;
     }
 
-    public void setCapacity(int capacity) {
+    private void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 

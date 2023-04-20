@@ -24,7 +24,7 @@ public class Enrolment {
         return id;
     }
 
-    public void setId(UUID id) {
+    private void setId(UUID id) {
         this.id = id;
     }
 
@@ -32,7 +32,7 @@ public class Enrolment {
         return studentId;
     }
 
-    public void setStudentId(UUID studentId) {
+    private void setStudentId(UUID studentId) {
         this.studentId = studentId;
     }
 
@@ -40,7 +40,7 @@ public class Enrolment {
         return courseId;
     }
 
-    public void setCourseId(UUID courseId) {
+    private void setCourseId(UUID courseId) {
         this.courseId = courseId;
     }
 }
