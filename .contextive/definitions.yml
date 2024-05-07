@@ -20,3 +20,7 @@ contexts:
       definition: The number of students who can enrol in a course that is happening in the room.
       examples:
         - The capacity of the room is 10.
+    - name: setup
+      definition: The process of defining a new room that is available at the university.  Usually only done once when the university is setting up the system, but may be done if they reconfigure their layouts.
+      examples:
+        - The admin has setup a new room.
