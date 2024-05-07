@@ -2,6 +2,7 @@ package au.chrissimon.universityapi.Enroling;
 
 import java.net.URI;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
@@ -28,6 +29,10 @@ public class EnrolmentApi {
                 .uri("/students/" + student.getId() + "/courses")
                 .bodyValue(enrolStudentInCourseRequest)
             .exchange();
+    }
+
+    public CompletableFuture<ResponseSpec> enrolStudentInCourseAsync(StudentResponse student, CourseResponse course) {
+        return CompletableFuture.supplyAsync(() -> enrolStudentInCourse(student, course));
     }
 
     public EnrolmentResponse getEnrolmentFromResponse(ResponseSpec enrolmentResponse) {
