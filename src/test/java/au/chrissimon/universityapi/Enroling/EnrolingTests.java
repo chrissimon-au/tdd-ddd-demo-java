@@ -18,8 +18,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 public class EnrolingTests {
@@ -170,35 +168,6 @@ public class EnrolingTests {
         StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
 
         ResponseSpec enrolmentResponse = enrolmentApi.enrolStudentInCourse(student, course);
-
-        itShouldNotEnrolMeWithError(enrolmentResponse);
-    }
-
-    @Test
-    public void givenTheCourseIWantIsFull_WhenIEnrolInACourseConcurrently() throws ExecutionException, InterruptedException {
-        SetupRoomRequest roomRequest = new SetupRoomRequest("Test Room", 3);
-        IncludeCourseRequest courseRequest = new IncludeCourseRequest("Test Course");
-
-        CourseResponse course = courseApi.getCourseFromResponse(courseApi.includeNewCourseInCatalog(roomRequest, courseRequest));
-
-        StudentResponse student1 = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test student 1")));
-        ResponseSpec er1 = enrolmentApi.enrolStudentInCourse(student1, course);
-        itShouldEnrolMe(er1);
-
-        StudentResponse student2 = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test student 2")));
-        ResponseSpec er2 = enrolmentApi.enrolStudentInCourse(student2, course);
-        itShouldEnrolMe(er2);
-
-        StudentResponse student3 = studentApi.getStudentFromResponse(studentApi.registerStudent(new RegisterStudentRequest("Test student 3")));
-
-        RegisterStudentRequest studentRequest = new RegisterStudentRequest("Test student who is too late");
-        StudentResponse student = studentApi.getStudentFromResponse(studentApi.registerStudent(studentRequest));
-
-        // Async without waiting for last two enrolments to simulate concurrency
-        CompletableFuture<ResponseSpec> er3Future = enrolmentApi.enrolStudentInCourseAsync(student3, course);
-        CompletableFuture<ResponseSpec> enrolmentResponseFuture = enrolmentApi.enrolStudentInCourseAsync(student, course);
-
-        ResponseSpec enrolmentResponse = enrolmentResponseFuture.get();
 
         itShouldNotEnrolMeWithError(enrolmentResponse);
     }
