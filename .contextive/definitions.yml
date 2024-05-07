@@ -8,3 +8,7 @@ contexts:
       examples:
         - The student has registered at the university.
         - The student has enroled in the course.
+    - name: register
+      definition: The process of a student registering with the university.  They will not yet be enroled in a course after registering.
+      examples:
+        - The student has registered and is intending to enrol in 3 courses.
