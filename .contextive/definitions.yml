@@ -12,3 +12,11 @@ contexts:
       definition: The process of a student registering with the university.  They will not yet be enroled in a course after registering.
       examples:
         - The student has registered and is intending to enrol in 3 courses.
+    - name: room
+      definition: A physical space that a course can be delivered in. Since it has a physical size it has a limited capacity for the number of students who can attend a course in the room.
+      examples:
+        - The room doesn't yet have any courses assigned to it.
+    - name: capacity
+      definition: The number of students who can enrol in a course that is happening in the room.
+      examples:
+        - The capacity of the room is 10.
