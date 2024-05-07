@@ -33,3 +33,7 @@ contexts:
       definition: The list of courses that are available for students to enrol in.
       examples:
         - The catalog has 10 courses available.
+    - name: include
+      definition: The process of including a course in the catalog.
+      examples:
+        - The administrator hasn't yet included my course in the catalog.
