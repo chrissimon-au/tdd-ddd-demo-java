@@ -49,3 +49,7 @@ contexts:
       definition: A student enrols in a course and when they do we record their enrolment. The enrolment keeps track of which student has enroled in which course.
       examples:
         - A course has 5 enrolments so far.
+    - name: schedule
+      definition: Either the process of creating a schedule, or the schedule itself, where the schedule is a definition of which courses are assigned to which rooms.
+      examples:
+        - I will be scheduling the courses on Friday, after enrolments are closed.
