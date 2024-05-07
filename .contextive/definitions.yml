@@ -24,3 +24,12 @@ contexts:
       definition: The process of defining a new room that is available at the university.  Usually only done once when the university is setting up the system, but may be done if they reconfigure their layouts.
       examples:
         - The admin has setup a new room.
+    - name: course
+      definition: A unit of study that is focussed on a topic or group of related topics.
+      examples:
+        - 'The student is enroling in the "Ancient History: Myths and Legends" course.'
+        - 10 students have enroled in the Test-Driven Development course.
+    - name: catalog
+      definition: The list of courses that are available for students to enrol in.
+      examples:
+        - The catalog has 10 courses available.
