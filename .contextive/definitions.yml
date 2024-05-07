@@ -37,3 +37,15 @@ contexts:
       definition: The process of including a course in the catalog.
       examples:
         - The administrator hasn't yet included my course in the catalog.
+    - name: enrol
+      definition: To enrol in a course is for a student to tell the university that they will study that course.
+      examples:
+        - I would like to enrol in Urban Geography.
+    - name: enroling
+      definition: The process of a student enroling in a course.
+      examples:
+        - I am enroling in Advanced Domain Modeling.
+    - name: enrolment
+      definition: A student enrols in a course and when they do we record their enrolment. The enrolment keeps track of which student has enroled in which course.
+      examples:
+        - A course has 5 enrolments so far.
